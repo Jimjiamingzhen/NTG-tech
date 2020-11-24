@@ -3,6 +3,10 @@
 $username = isset($_POST['username']) ? $_POST['username'] : "";
 $password = isset($_POST['password']) ? $_POST['password'] : "";
 $remember = isset($_POST['remember']) ? $_POST['remember'] : ""; //判断用户名和密码是否为空
+$function = isset($_POST['submitButtom']) ? $_POST['submitButtom'] : "";
+$newPassword = isset($_POST['newPassword']) ? $_POST['newPassword'] : "";
+$confirm = isset($_POST['confirm']) ? $_POST['confirm'] : "";
+$personID = isset($_POST['personID']) ? $_POST['personID'] : "";
 
 $servername = "39.102.86.62";
 $DBusername = "root";
@@ -10,17 +14,16 @@ $DBpassword = "2788098";
 $DBname = "SDM202";
 $port = 3306;
 
-if (!empty($username) && !empty($password)) { //建立连接
-    $conn = new mysqli($servername, $DBusername, $DBpassword, $DBname, $port);
-    $conn -> query("SET NAMES utf8");
-    $sql_select = "SELECT PersonName,Password,PersonRole FROM Persons WHERE PersonName = '$username' AND Password = '$password'"; //执行SQL语句
-    $ret = mysqli_query($conn, $sql_select);
-    echo $sql_select;
-    $row = mysqli_fetch_array($ret); //判断用户名或密码是否正确
-    echo $conn->error;
-    echo var_dump($row);
-    if ($username == $row['PersonName'] && $password == $row['Password']) 
-    { //选中“记住我”
+ //建立连接
+$conn = new mysqli($servername, $DBusername, $DBpassword, $DBname, $port);
+$conn -> query("SET NAMES utf8");
+$sql_select = "SELECT PersonName,Password,PersonRole,PersonID FROM Persons WHERE PersonName = '$username' AND Password = '$password'"; //执行SQL语句
+$ret = $conn->query($sql_select);
+$row = $ret->fetch_array(); //判断用户名或密码是否正确
+if ($username == $row['PersonName'] && $password == $row['Password']) 
+{   //若为登录
+    if($function == "登录"){
+        //选中“记住我”
         if ($remember == "on") 
         { //创建cookie
             setcookie("", $username, time() + 7 * 24 * 3600);
@@ -46,13 +49,36 @@ if (!empty($username) && !empty($password)) { //建立连接
         }
         mysqli_close($conn);
     }
-    /*
-    else 
-    { 
-        //用户名或密码错误，赋值err为1
-        header("Location:login.php?err=1");
-    }
-} else { //用户名或密码为空，赋值err为2
-    header("Location:login.php?err=2");
-      */  
-} ?> 
+    //若为修改密码
+    else{
+        if($personID == $row['PersonID']){
+            if($newPassword == $confirm){  
+                $sql_reset = "UPDATE Persons SET Password = '$newPassword' WHERE PersonName = '$username' and PersonID = $personID;";
+                $conn->query($sql_reset);
+                echo $conn->error;
+                mysqli_close($conn);
+                //修改成功，请重新登录,err=4
+                header("Location:login.php?err=4");
+
+            }
+            else{
+                //新密码与密码确认不匹配,err-3
+                header("Location:login.php?err=3");
+
+            }
+        }
+        else{
+            //用户名与ID不匹配， 赋值err=2
+            header("Location:login.php?err=2");
+
+        }
+    }   
+
+}
+
+else 
+{ 
+    //用户名或密码错误，赋值err为1
+    header("Location:login.php?err=1");
+}
+ ?> 

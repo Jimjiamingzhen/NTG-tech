@@ -286,6 +286,7 @@
             evaluator: $('#name').text()
         },
         function(data,status){
+            console.log(data);
             groupMembers = JSON.parse(data);
             var nameTags = $('#evaluatees').children();
             for (var i = 1; i < groupMembers.length+1; i++){
