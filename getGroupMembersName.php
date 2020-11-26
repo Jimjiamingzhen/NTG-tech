@@ -13,11 +13,9 @@ if ($conn->connect_error) {
     die("连接失败: " . $conn->connect_error);
 
 } 
-
 $getUserGroupsql = "SELECT StudentGroup From Persons WHERE PersonName = '$evaluator'";
 $result = $conn -> query($getUserGroupsql);
 $studentGroup = $result -> fetch_assoc()['StudentGroup'];
-
 $getGroupNumbersql = "SELECT count(*) FROM Groups;";
 $result = $conn-> query ($getGroupNumbersql);
 $groupNumbers = $result -> fetch_assoc()['count(*)'];
@@ -32,7 +30,7 @@ if($studentGroup == $groupNumbers){
         }
         array_push($evaluatees, $groupMembers);
     }
-    echo json_encode($groupMembers, JSON_UNESCAPED_UNICODE);
+    echo json_encode($evaluatees, JSON_UNESCAPED_UNICODE);
 }
 else{
     $groupMembers = array();
