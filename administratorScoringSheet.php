@@ -135,11 +135,11 @@
             evaluations:[],
             week:"",
             weekValid:true,
-            evaluator:"<?php echo "贾明臻";?>",
+            evaluator:"<?php echo "洪小平";?>",
             date:"",
             rubrics:['Knowledge Acquisition','Motivation','Communication','Hands-on Skills', 'Thinking Skills','Responsibility','Project Execution'],
             course:"",
-            alertText:"",
+            alertText:"啊哈",
             errorCount:0,
             submitAllowed:true
         },
@@ -203,7 +203,6 @@
                 }
 
                 function validateWeek(week, that){
-                    console.log(Math.floor(week)!=week);
                     if(week<=0 || week>16 || isNaN(week) || Math.floor(week) != week){
                         that.submitAllowed = false;
                         that.weekValid = false;
@@ -221,6 +220,7 @@
                 this.errorCount = 0;
                 this.alertText = "";
                 this.submitAllowed = true;
+                this.weekValid = true;
                 validateWeek(this.week, that);
                 for(group in evaluations){
                     for(person in evaluations[group]){
@@ -229,7 +229,6 @@
                         for(i in invalid){
                             this.evaluations[group][person].valid[invalid[i]] = false;
                             this.$forceUpdate();
-                            console.log(this.evaluations[group][person].valid);
                         }
                         evaluationsToSubmit.push(
                             new Evaluation(
@@ -239,7 +238,21 @@
                                 personRecord.score[5], personRecord.score[6], this.date, personRecord.comment));
                     }
                 }
-                console.log(evaluations);
+                console.log(this.submitAllowed);
+                if (this.submitAllowed == true){
+                    var evaluationsInJson = JSON.stringify(evaluationsToSubmit)
+                    $.post("handleEvaluations.php",{
+                        evaluationData:evaluationsInJson
+                    },
+                    function(data, status){
+                        alert(data);
+                        this.alertText += data;
+                    });
+                }
+                else{
+                    this.alertText += '<br>Submit fail';
+                }
+
             }
         },
         created(){
