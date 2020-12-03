@@ -11,12 +11,12 @@
             $evaluator =  $_SESSION['user'];
             if(isset($_SESSION['role'])){
                 if($_SESSION['role'] == 1){
-                    //header("Location:scoringSheet.php");
+                    header("Location:scoringSheet.php");
                 }
             }
         }
         else{
-            //header("Location:login.php");
+            header("Location:login.php");
         }
 ?>
 
@@ -67,6 +67,15 @@
     <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        function logout(){
+                    $.post("logout.php")
+                    location.reload(true);
+                }
+        function management(){
+            self.location = "management.php";
+        }
+    </script>
 
 </head>
 <body>
@@ -76,6 +85,7 @@
         <p>Current User: <?php echo $_SESSION['user'];?> </p>
         <p>Role: administrator</p>
         <button id ="logout" type="button" onclick="logout()">Logout</button>
+        <button id ="headToManagement" type="button" onclick="self.location = 'management.php';">Management</button>
     </div>
 
     <!-- BLANK -->  

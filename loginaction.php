@@ -45,7 +45,7 @@ if ($username == $row['PersonName'] && $password == $row['Password'])
             header("Location:scoringSheet.php"); 
         }
         else{
-            header("Location:management.php"); 
+            header("Location:administratorScoringSheet.php"); 
         }
         mysqli_close($conn);
     }

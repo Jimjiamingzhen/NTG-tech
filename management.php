@@ -68,6 +68,7 @@
         <p>Current User: <?php echo $_SESSION['user'];?> </p>
         <p>Role: administrator</p>
         <button id ="logout" type="button" onclick="logout()">Logout</button>
+        <button id ="headToScoringSheet" type="button" onclick="self.location = 'administratorScoringSheet.php';">Scoring Sheet</button>
     </div>
 
     <div id = "blank" style = "width:100%;height:50px;">
