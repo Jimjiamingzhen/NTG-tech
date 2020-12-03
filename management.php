@@ -111,7 +111,9 @@
         </table>
 
     </div>
-
+    <div id="handleEvaluation">
+        <button id ="summarizeEvaluation" type="button" @click="summarizeEvaluation">summarizeEvaluation</button>
+    </div>
     <script>
 
         new Vue({
@@ -138,6 +140,26 @@
                     )
                 }
             }
+        })
+        new Vue({
+            el:"#handleEvaluation",
+            data:{
+                week:1,
+                course:'SDM232'
+            },
+            methods:{
+                summarizeEvaluation:function(){
+                    var params = new URLSearchParams();
+                    params.append('week',this.week);
+                    params.append('course',this.course);
+                    params.append('action','summarize');
+                    axios.post('statistics.php',params).then(function(response){
+                        alert(response.data);
+                    });
+                }
+            }
+        
+        
         })
     </script>
 </body>
