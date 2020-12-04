@@ -52,6 +52,11 @@ if __name__=='__main__':
     args = sys.argv #[filename, course, week]
     course = args[1]
     week = args[2]
+    courseId = (session.query(db_classes.Courses).filter(
+        db_classes.Courses.CourseID == course).first()).id
+    session.query(db_classes.Grade).filter(sqlalchemy.and_(
+        db_classes.Grade.Week == week,
+        db_classes.Grade.Course ==courseId)).delete()
     personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
     studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(
         db_classes.Persons.PersonRole == 1).all()[0][0]

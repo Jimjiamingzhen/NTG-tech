@@ -111,8 +111,56 @@
         </table>
 
     </div>
+    <div id = "blank" style = "width:100%;height:50px;">
+
+    </div>
     <div id="handleEvaluation">
-        <button id ="summarizeEvaluation" type="button" @click="summarizeEvaluation">summarizeEvaluation</button>
+        <table>
+            <tr>
+                <td colspan = 4>
+                HANDLE EVALUATIONS
+                </td>
+            </tr>
+            <tr>
+                <td >
+                    Week:<input v-model = "week" placeholder = "week">
+                </td>
+                <td colspan = 2>
+                    Course:<input v-model = "course" placeholder = "course">
+                </td>
+            </tr>
+            <tr>
+                <td colspan = 4>
+                <button id ="summarizeEvaluation" type="button" @click="summarizeEvaluation">summarizeEvaluation</button>
+                <span v-html = "summarizeWorkState"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    INweight:<input v-model = "INweight" placeholder = "Inweight">
+                </td>
+                <td>
+                    TAweight:<input v-model = "TAweight" placeholder = "TAweight">
+                </td>
+                <td colspan = 2>
+                    STweight:<input v-model = "STweight" placeholder = "STweight">
+                </td>
+            </tr>
+            <tr v-if="course == 'SDM242'">
+                <td >
+                    STINweight:<input v-model = "STINweight" placeholder = "STINweight">
+                </td>
+                <td colspan = 2>
+                    STTAweight:<input v-model = "STTAweight" placeholder = "STTAweight">
+                </td>
+            </tr>
+            <tr>
+                <td colspan = 4>
+                <button id ="calcTotalGrade" type="button" @click="calcTotalGrade">Calculate Total Grade</button>
+                <span v-html = "calcTotalGradeWorkState"></span>
+                </td>
+            </tr>
+        </table>
     </div>
     <script>
 
@@ -144,8 +192,15 @@
         new Vue({
             el:"#handleEvaluation",
             data:{
-                week:1,
-                course:'SDM232'
+                week:10,
+                course:'SDM242',
+                INweight:0.5,
+                TAweight:0.3,
+                STweight:0.2,
+                STINweight:0.625,
+                STTAweight:0.375,
+                summarizeWorkState:"",
+                calcTotalGradeWorkState:""
             },
             methods:{
                 summarizeEvaluation:function(){
@@ -153,7 +208,26 @@
                     params.append('week',this.week);
                     params.append('course',this.course);
                     params.append('action','summarize');
+                    this.summarizeWorkState = "Working,please wait for a moment";
+                    var that = this;
                     axios.post('statistics.php',params).then(function(response){
+                        that.summarizeWorkState = "Done";
+                        alert(response.data);
+
+                    });
+                },
+                calcTotalGrade:function(){
+                    var params = new URLSearchParams();
+                    params.append('week',this.week);
+                    params.append('course',this.course);
+                    params.append('action','calcTotalGrade');
+                    params.append('INweight',this.INweight);
+                    params.append('TAweight',this.TAweight);
+                    params.append('STweight',this.STweight);
+                    this.calcTotalGradeWorkState = "Working,please wait for a moment";
+                    var that = this;
+                    axios.post('statistics.php',params).then(function(response){
+                        that.calcTotalGradeWorkState = "Done";
                         alert(response.data);
                     });
                 }
