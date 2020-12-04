@@ -1,11 +1,12 @@
 <?php 
     header("Content-Type:text/html;charset=utf-8");
     $evaluationsInJson = htmlspecialchars_decode(isset($_POST['evaluationData']) ? htmlspecialchars($_POST['evaluationData']) : '');
+    $course = htmlspecialchars_decode(isset($_POST['course']) ? htmlspecialchars($_POST['course']) : '');
     $evaluations = json_decode($evaluationsInJson);
     $servername = "39.102.86.62";
     $username = "root";
     $password = "2788098";
-    $dbname = "SDM202";
+    $dbname = $course;
     $port = 3306;
 
     $conn = connectToServer($servername, $username, $password, $dbname, $port);
@@ -43,16 +44,8 @@
         return $row;
     }
 
-    function getCourse($conn, $course){
-        $sqlGetCourse = "SELECT `id` FROM `Courses` WHERE `CourseID` = '$course';";
-        $result = $conn -> query($sqlGetCourse);
-        $row = $result ->fetch_assoc();
-        $result->free();
-        return $row['id'];
-    }
 
     function addEvaluation($conn, $evaluation){
-        $course = getCourse($conn, $evaluation -> {'course'});
         $week = $evaluation -> {'week'};
         $evaluatorName = $evaluation ->{'evaluator'};
         $evaluator = getPerson($conn, $evaluatorName);
@@ -65,7 +58,7 @@
         for ($rubrics = 0; $rubrics < 7; $rubrics++ ){
             $rubricsItem = $rubrics + 1;
             $score = $scores[$rubrics];
-            $sql .= "INSERT INTO `Evaluation` VALUES (NULL, $course, $week, $evaluateeId, $evaluatorId, $rubricsItem, '$score', '', '$inputDate', $dataSource);";
+            $sql .= "INSERT INTO `Evaluation` VALUES (NULL, $week, $evaluateeId, $evaluatorId, $rubricsItem, '$score', '', '$inputDate', $dataSource);";
         }
         if ($conn->multi_query($sql) === TRUE) {            
             while ($conn->more_results() && $conn->next_result())
@@ -78,18 +71,16 @@
 
     }
     function addSubmitRecord($conn, $evaluation){
-        $course = getCourse($conn, $evaluation -> {'course'});
         $week = $evaluation -> {'week'};
         $evaluatorName = $evaluation ->{'evaluator'};
         $inputDate = $evaluation -> {'InputDate'};
-        $sql ="INSERT INTO `SubmitRecord` VALUES (NULL, '$evaluatorName', $course, $week, '$inputDate');";
+        $sql ="INSERT INTO `SubmitRecord` VALUES (NULL, '$evaluatorName', $week, '$inputDate');";
         $conn->query($sql); 
     }
     function alreadySubmitted($conn, $evaluation){
-        $course = getCourse($conn, $evaluation -> {'course'});
         $week = $evaluation -> {'week'};
         $evaluatorName = $evaluation ->{'evaluator'};
-        $sql = "SELECT * FROM `SubmitRecord` WHERE Evaluator = '$evaluatorName' and Course = $course and Week = $week;";
+        $sql = "SELECT * FROM `SubmitRecord` WHERE Evaluator = '$evaluatorName' and Week = $week;";
         $result = $conn->query($sql);
         
         return mysqli_num_rows($result);

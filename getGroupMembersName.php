@@ -1,11 +1,11 @@
 <?php
 $evaluator = isset($_POST['evaluator']) ? htmlspecialchars($_POST['evaluator']) : '';
+$course = isset($_POST['course']) ? htmlspecialchars($_POST['course']) : '';
 $servername = "39.102.86.62";
 $username = "root";
 $password = "2788098";
-$dbname = "SDM202";
+$dbname = $course;
 $port = 3306; 
-
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
 $conn -> query("SET NAMES utf8");
 // 检测连接

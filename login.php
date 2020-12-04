@@ -41,6 +41,16 @@
                         <td><input type="password" id="password" name="password" required="required"></td> 
                     </tr> 
 
+                    <tr v-if=!resetting> 
+                        <td>用户组：  </td> 
+                        <td>
+                            <select id="role" name = "role">
+                                <option value="student">Student</option>
+                                <option value="administrator">Administrator</option>
+                            </select>
+                        </td> 
+                    </tr> 
+
                     <tr v-if=resetting> 
                         <td>新密码：  </td> 
                         <td><input type="text" id="newPassword" name="newPassword" required="required"></td> 
@@ -80,7 +90,9 @@
                                     case 4:
                                         echo "密码修改成功，请重新登录";
                                         break;
-                                        
+                                    case 5:
+                                        echo "当前用户组无该用户，请尝试更换其他用户组";
+                                        break;
                                     
                                     
                                 } 
