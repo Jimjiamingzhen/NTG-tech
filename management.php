@@ -224,6 +224,8 @@
                     params.append('INweight',this.INweight);
                     params.append('TAweight',this.TAweight);
                     params.append('STweight',this.STweight);
+                    params.append('STTAweight',this.STTAweight);
+                    params.append('STINweight',this.STINweight);
                     this.calcTotalGradeWorkState = "Working,please wait for a moment";
                     var that = this;
                     axios.post('statistics.php',params).then(function(response){

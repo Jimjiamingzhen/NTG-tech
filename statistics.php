@@ -13,7 +13,8 @@
             $STINweight = isset($_POST['STINweight']) ? $_POST['STINweight'] : "?";
             $STTAweight = isset($_POST['STTAweight']) ? $_POST['STTAweight'] : "?";
             exec("python calcAverageScore.py $course $week");
-            echo"wuhu";
+            exec("python totalGrade4SDM242.py $course $week $INweight $TAweight $STweight $STINweight $STTAweight");
+
         }
     }
     else{

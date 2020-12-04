@@ -4,6 +4,8 @@ import db_classes
 import dbinfo
 import constants
 import time
+import sys
+
 def calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN):
     ScoreST = session.query(db_classes.Grade).filter(
         sqlalchemy.and_(db_classes.Grade.EvaluateeID == student,
@@ -26,20 +28,12 @@ def calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN,
     for rubricsItem in range(1, rubricsNumber + 1):
         rubricsName = session.query(db_classes.Rubrics.RubricsName).filter(db_classes.Rubrics.id == rubricsItem).first()[0]
         itemScoreST = getattr(ScoreST, rubricsName)
-        print("Score ST" + itemScoreST)
         itemScoreSTAvg = getattr(ScoreSTAvg, rubricsName)
-        print("Score STAvg" + itemScoreSTAvg)
         itemScoreTA = getattr(scoreTA, rubricsName)
-        print("Score TA" + itemScoreTA)
         itemScoreIN = getattr(scoreIN, rubricsName)
-        print("Score IN" + itemScoreIN)
         itemScoreSTFinal = weightSTTA * float(itemScoreTA) + weightSTIN * float(itemScoreIN) + float(itemScoreST) - float(itemScoreSTAvg) if ((itemScoreST and itemScoreTA and itemScoreIN) is not None) else None
-        print(itemScoreSTFinal)
         weightedScore = weightST * float(itemScoreSTFinal) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN) if ((itemScoreST and itemScoreTA and itemScoreIN) is not None) else None
-        print(weightedScore)
-
         totalScore.append(weightedScore)
-        print(totalScore)
     new_totalGrade = db_classes.TotalGrade()
     new_totalGrade.Course = (session.query(db_classes.Courses).filter(
         db_classes.Courses.CourseID == course).first()).id
@@ -106,19 +100,23 @@ if __name__=='__main__':
     engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
     Session = sessionmaker(bind=engine)
     session = Session()
-    week = 10
-    course = 'SDM242'
+
+    args = sys.argv #[filename, course, week, weighIN, weightTA, weightST, weightSTIN, weightSTTA]
+    print(args)
+    week = args[2]
+    course = args[1]
+
     personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
     studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(
         db_classes.Persons.PersonRole == 1).all()[0][0]
-    weightST = 0.2
-    weightTA = 0.3
-    weightIN = 0.5
-    weightSTTA = 0.375
-    weightSTIN = 0.625
+
+    weightIN = float(args[3])
+    weightTA = float(args[4])
+    weightST = float(args[5])
+    weightSTIN = float(args[6])
+    weightSTTA = float(args[7])
 
     for student in range(personNumber - studentNumber + 1, personNumber + 1):
-        print(student)
         calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN)
 
     calcTotalAvg(session, week, course)

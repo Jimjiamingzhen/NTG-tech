@@ -4,6 +4,7 @@ import db_classes
 import dbinfo
 import constants
 import time
+import sys
 
 def groupAverage(session, week, course):
     for group in range(1, len(session.query(db_classes.Groups.id).all())):
@@ -38,5 +39,9 @@ if __name__ == '__main__':
     args = sys.argv #[filename, course, week]
     course = args[1]
     week = args[2]
-    print(args)
+    courseId = (session.query(db_classes.Courses).filter(
+        db_classes.Courses.CourseID == course).first()).id
+    session.query(db_classes.AverageGrade).filter(sqlalchemy.and_(
+        db_classes.AverageGrade.Week == week,
+        db_classes.AverageGrade.Course ==courseId)).delete()
     groupAverage(session, week, course)
