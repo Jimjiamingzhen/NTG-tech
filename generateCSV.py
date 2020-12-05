@@ -6,13 +6,15 @@ import constants
 import csv
 import os
 import codecs
+import zipfile
 
 week = 10
 course = 'SDM242'
 
 folder = r'C:\Users\Jim\Desktop\sdmtemp'
-path = os.path.join(folder, "%sWEEK%d.csv"%(course, week))
-file = codecs.open(path, 'w', "gbk")
+pathFile = os.path.join(folder, "%sWEEK%d.csv"%(course, week))
+pathZip = os.path.join(folder, "%sWEEK%d.zip"%(course, week))
+file = codecs.open(pathFile, 'w', "gbk")
 csvWritter = csv.writer(file)
 
 
@@ -27,3 +29,6 @@ csvWritter.writerow([ column for column in columns])
 for grade in grades:
     csvWritter.writerow([getattr(grade, column) for column in columns])
 file.close()
+Zip = zipfile.ZipFile(pathZip,'a')
+Zip.write(pathFile, "%sWEEK%d.csv"%(course, week), compress_type=zipfile.ZIP_DEFLATED)
+Zip.close()
