@@ -4,6 +4,7 @@
     $action = isset($_POST['action']) ? $_POST['action'] : "?";
     if($action == 'summarize'){
         exec("python summarizeEvaluation.py $course $week");
+
     }
     elseif($action == 'calcTotalGrade'){
         $INweight = isset($_POST['INweight']) ? $_POST['INweight'] : "?";
@@ -14,6 +15,10 @@
             $STTAweight = isset($_POST['STTAweight']) ? $_POST['STTAweight'] : "?";
             exec("python calcAverageScore.py $course $week");
             exec("python totalGrade4SDM242.py $course $week $INweight $TAweight $STweight $STINweight $STTAweight");
+        }
+        else{
+            exec("python totalGrade.py $course $week $INweight $TAweight $STweight");
+
         }
     }
     else{

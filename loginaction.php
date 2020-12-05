@@ -60,7 +60,7 @@ if ($username == $row['PersonName'] && $password == $row['Password'])
             fclose($f); //跳转到loginsucc.php页面
             $conn->query($sql_logs);
             if($loginRole == 'student'){
-                header("Location:scoringSheetNew.php"); 
+                header("Location:scoringSheet.php"); 
             }
             else{
                 header("Location:administratorScoringSheet.php"); 

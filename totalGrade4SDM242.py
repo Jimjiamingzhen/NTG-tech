@@ -79,7 +79,6 @@ def calcTotalAvg(session, week):
 if __name__=='__main__':
 
     args = sys.argv #[filename, course, week, weighIN, weightTA, weightST, weightSTIN, weightSTTA]
-    print(args)
     week = args[2]
     course = args[1]
 

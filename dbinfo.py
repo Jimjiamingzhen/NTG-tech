@@ -1,6 +1,6 @@
 
 host = '39.102.86.62:3306'
-database = 'SDM202'
+#database = 'SDM202'
 user = 'root'
 password = '2788098'
 '''

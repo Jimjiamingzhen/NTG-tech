@@ -10,7 +10,7 @@
 
         session_start();
         if (isset($_SESSION['user'])){
-            header("Location:scoringSheet.php");
+            #header("Location:scoringSheet.php");
         }
 
     ?>

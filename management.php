@@ -217,7 +217,7 @@
                     var that = this;
                     axios.post('statistics.php',params).then(function(response){
                         that.summarizeWorkState = "Done";
-                        alert(response.data);
+                        console.log(response.data);
 
                     });
                 },
@@ -235,7 +235,7 @@
                     var that = this;
                     axios.post('statistics.php',params).then(function(response){
                         that.calcTotalGradeWorkState = "Done";
-                        alert(response.data);
+                        console.log(response.data);
                     });
                 }
             }
