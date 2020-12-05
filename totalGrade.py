@@ -5,7 +5,7 @@ import dbinfo
 import constants
 import time
 def calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN):
-    print('11111111111111111sa',student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN)
+        print('11111111111111111sa',student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN)
     ScoreST = session.query(db_classes.Grade).filter(
         sqlalchemy.and_(db_classes.Grade.EvaluateeID == student,
                         db_classes.Grade.DataSource == 1,

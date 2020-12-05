@@ -5,11 +5,9 @@ import dbinfo
 import constants
 import time
 import sys
-def summarizeEvaluations(session, student, role, course, week):
+def summarizeEvaluations(session, student, role, week):
     scores = []
     new_grade = db_classes.Grade()
-    new_grade.Course = (session.query(db_classes.Courses).filter(
-        db_classes.Courses.CourseID == course).first()).id
     new_grade.Week = week
     evaluatee = session.query(db_classes.Persons).filter(
         db_classes.Persons.id == student).first()
@@ -44,22 +42,21 @@ def summarizeEvaluations(session, student, role, course, week):
     session.commit()
 
 if __name__=='__main__':
-    SQLALCHEMY_DATABASE_URI = \
-        'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + dbinfo.database
-    engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
-    Session = sessionmaker(bind=engine)
-    session = Session()
+
     args = sys.argv #[filename, course, week]
     course = args[1]
     week = args[2]
-    courseId = (session.query(db_classes.Courses).filter(
-        db_classes.Courses.CourseID == course).first()).id
-    session.query(db_classes.Grade).filter(sqlalchemy.and_(
-        db_classes.Grade.Week == week,
-        db_classes.Grade.Course ==courseId)).delete()
+
+    SQLALCHEMY_DATABASE_URI = \
+        'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + course
+    engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    session.query(db_classes.Grade).filter(db_classes.Grade.Week == week).delete()
     personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
     studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(
         db_classes.Persons.PersonRole == 1).all()[0][0]
     for role in range(1, len(constants.ROLES) + 1):
         for student in range(personNumber - studentNumber + 1, personNumber + 1):
-            summarizeEvaluations(session, student, role, course, week)
+            summarizeEvaluations(session, student, role, week)

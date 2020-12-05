@@ -6,7 +6,7 @@ import constants
 import time
 import sys
 
-def calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN):
+def calcTotalGrade(session, student, week, weightST, weightTA, weightIN, weightSTTA, weightSTIN):
     ScoreST = session.query(db_classes.Grade).filter(
         sqlalchemy.and_(db_classes.Grade.EvaluateeID == student,
                         db_classes.Grade.DataSource == 1,
@@ -35,8 +35,6 @@ def calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN,
         weightedScore = weightST * float(itemScoreSTFinal) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN) if ((itemScoreST and itemScoreTA and itemScoreIN) is not None) else None
         totalScore.append(weightedScore)
     new_totalGrade = db_classes.TotalGrade()
-    new_totalGrade.Course = (session.query(db_classes.Courses).filter(
-        db_classes.Courses.CourseID == course).first()).id
     new_totalGrade.Week = week
     evaluatee = session.query(db_classes.Persons).filter(
         db_classes.Persons.id == student).first()
@@ -56,55 +54,40 @@ def calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN,
     session.add(new_totalGrade)
     session.commit()
 
-def calcTotalAvg(session, week, course):
+def calcTotalAvg(session, week):
     new_average = db_classes.AverageGrade()
     new_average.Week = week
-    new_average.Course = (session.query(db_classes.Courses).filter(
-        db_classes.Courses.CourseID == course).first()).id
     new_average.StudentGroup = 6
     new_average.KnowledgeAcquisition = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.KnowledgeAcquisition)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.KnowledgeAcquisition)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.Motivation = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Motivation)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Motivation)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.Communication = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Communication)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Communication)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.HandsOnSkills = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.HandsOnSkills)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.HandsOnSkills)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.ThinkingSkills = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.ThinkingSkills)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.ThinkingSkills)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.Responsibility = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Responsibility)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Responsibility)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.ProjectExecution = round(
-        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.ProjectExecution)).filter(
-            sqlalchemy.and_(db_classes.TotalGrade.Week == new_average.Week,
-                            db_classes.TotalGrade.Course == new_average.Course)).all()[0][0], 2)
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.ProjectExecution)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.InputDate = time.strftime("%Y-%m-%d")
     session.add(new_average)
     session.commit()
 
 if __name__=='__main__':
-    SQLALCHEMY_DATABASE_URI = \
-        'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + dbinfo.database
-    engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
-    Session = sessionmaker(bind=engine)
-    session = Session()
 
     args = sys.argv #[filename, course, week, weighIN, weightTA, weightST, weightSTIN, weightSTTA]
     print(args)
     week = args[2]
     course = args[1]
+
+    SQLALCHEMY_DATABASE_URI = \
+        'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + course
+    engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
     personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
     studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(
@@ -116,9 +99,12 @@ if __name__=='__main__':
     weightSTIN = float(args[6])
     weightSTTA = float(args[7])
 
-    for student in range(personNumber - studentNumber + 1, personNumber + 1):
-        calcTotalGrade(session, student, week, course, weightST, weightTA, weightIN, weightSTTA, weightSTIN)
+    session.query(db_classes.TotalGrade).filter(db_classes.TotalGrade.Week == week).delete()
+    session.query(db_classes.AverageGrade).filter(sqlalchemy.and_(db_classes.AverageGrade.Week == week, db_classes.AverageGrade.StudentGroup == 6)).delete()
 
-    calcTotalAvg(session, week, course)
+    for student in range(personNumber - studentNumber + 1, personNumber + 1):
+        calcTotalGrade(session, student, week, weightST, weightTA, weightIN, weightSTTA, weightSTIN)
+
+    calcTotalAvg(session, week)
 
 

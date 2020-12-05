@@ -102,11 +102,7 @@
                     <th>Course</th>
                     <td colspan="2">
                         <select v-model='course'>
-                        <option disabled value="">请选择</option>
-                        <option value="SDM232">SDM232</option>
-                        <option value="SDM242">SDM242</option>
-                        <option value="SDM262">SDM262</option>
-                        <option value="SDM272">SDM272</option>
+                            <option v-for = 'coursename in courseList' :value='coursename'>{{coursename}}</option>
                         </select>
                     </td>
                     <th>Week</th>
@@ -142,18 +138,20 @@
                 evaluations:[],
                 week:"",
                 weekValid:true,
-                evaluator:"<?php echo "贾明臻";?>",
+                evaluator:"<?php echo $_SESSION['user'];?>",
                 date:"",
                 rubrics:['Knowledge Acquisition','Motivation','Communication','Hands-on Skills', 'Thinking Skills','Responsibility','Project Execution'],
                 course:"",
                 alertText:"啊哈",
                 errorCount:0,
-                submitAllowed:true
+                submitAllowed:true,
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>
             },
             methods:{
                 getEvaluatees:function(){
                     var params = new URLSearchParams();
                     params.append('evaluator',this.evaluator);
+                    params.append('course',this.courseList[0]);
                     var that = this;
                     axios
                         .post('getGroupMembersName.php',params)
@@ -199,8 +197,8 @@
                                 that.submitAllowed = false;
                                 invalid.push(i);
                                 that.errorCount+=1;
-                                alert = '<br>error' + that.errorCount + ': Score should be numbers between 0 and 5';
-                                that.alertText+=alert;
+                                alertContent = '<br>error' + that.errorCount + ': Score should be numbers between 0 and 5';
+                                that.alertText+=alertContent;
                             }
                             else{
                                 personRecord.valid[i]= true;
@@ -214,13 +212,20 @@
                             that.submitAllowed = false;
                             that.weekValid = false;
                             that.errorCount+=1;
-                            alert = '<br>error' + that.errorCount + ': week should be a number between 0 and 16';
-                            that.alertText+=alert;
+                            alertContent = '<br>error' + that.errorCount + ': week should be a number between 0 and 16';
+                            that.alertText+=alertContent;
                         }
 
+                    }
+                    function validateCourse(that){
+                        if(that.course == ""){
+                            that.submitAllowed = false;
+                            that.errorCount+=1;
+                            alertContent = '<br>error' + that.errorCount + ':Please select a course';
+                            that.alertText+=alertContent;
+                        }
 
                     }
-
                     var evaluationsToSubmit = [];
                     var evaluations = this.evaluations;
                     var that = this;
@@ -229,6 +234,7 @@
                     this.submitAllowed = true;
                     this.weekValid = true;
                     validateWeek(this.week, that);
+                    validateCourse(that);
                     for(group in evaluations){
                         for(person in evaluations[group]){
                             var personRecord = evaluations[group][person];
@@ -245,15 +251,16 @@
                                     personRecord.score[5], personRecord.score[6], this.date, personRecord.comment));
                         }
                     }
-                    console.log(this.submitAllowed);
                     if (this.submitAllowed == true){
                         var evaluationsInJson = JSON.stringify(evaluationsToSubmit)
                         $.post("handleEvaluations.php",{
-                            evaluationData:evaluationsInJson
+                            evaluationData:evaluationsInJson,
+                            'course':that.course
                         },
                         function(data, status){
                             alert(data);
                             this.alertText += data;
+                            console.log(data);
                         });
                     }
                     else{

@@ -134,7 +134,7 @@
                 evaluations:[],
                 week:"",
                 weekValid:true,
-                evaluator:"<?php echo "莫中天";?>",
+                evaluator:"<?php echo $_SESSION['user'];?>",
                 date:"",
                 rubrics:['Knowledge Acquisition','Motivation','Communication','Hands-on Skills', 'Thinking Skills','Responsibility','Project Execution'],
                 course:"",

@@ -5,8 +5,8 @@
     if(isset($_SESSION['user'])){
         $evaluator =  $_SESSION['user'];
         if(isset($_SESSION['role'])){
-            if($_SESSION['role'] == 1){
-                header("Location:scoringSheet.php");
+            if($_SESSION['role'] == 'student'){
+                header("Location:login.php");
             }
         }
     }
@@ -126,7 +126,9 @@
                     Week:<input v-model = "week" placeholder = "week">
                 </td>
                 <td colspan = 2>
-                    Course:<input v-model = "course" placeholder = "course">
+                    <select v-model='course'>
+                        <option v-for = 'coursename in courseList' :value='coursename'>{{coursename}}</option>
+                    </select>                
                 </td>
             </tr>
             <tr>
@@ -169,12 +171,14 @@
             data:{
                 weekNumber:16,
                 evaluationNumbers:[],
-                missingEvaluators:[]
+                missingEvaluators:[],
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>
             },
             methods:{
                 getEvaluationNumber:function(){
                     var params = new URLSearchParams();
                     params.append('weekNumber',this.weekNumber);
+                    params.append('course',this.courseList[0]);
                     var that = this;
                     axios
                     .post('getEvaluationNumber.php',params)
@@ -193,14 +197,15 @@
             el:"#handleEvaluation",
             data:{
                 week:10,
-                course:'SDM242',
+                course:'',
                 INweight:0.5,
                 TAweight:0.3,
                 STweight:0.2,
                 STINweight:0.625,
                 STTAweight:0.375,
                 summarizeWorkState:"",
-                calcTotalGradeWorkState:""
+                calcTotalGradeWorkState:"",
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>
             },
             methods:{
                 summarizeEvaluation:function(){

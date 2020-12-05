@@ -8,7 +8,6 @@
     $password = "2788098";
     $dbname = $course;
     $port = 3306;
-
     $conn = connectToServer($servername, $username, $password, $dbname, $port);
     $evaluationAlreadyExist = alreadySubmitted($conn, $evaluations[0]);
     if($evaluationAlreadyExist){

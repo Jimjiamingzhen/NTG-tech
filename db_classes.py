@@ -30,12 +30,6 @@ class Roles(Base):
     id = Column(Integer, primary_key=True)
     RoleName = Column(String(100), nullable=False)
 
-class Courses(Base):
-    __tablename__ = 'Courses'
-    id = Column(Integer, primary_key=True)
-    CourseID = Column(String(100), nullable=False)
-    CourseName = Column(String(100))
-
 class Rubrics(Base):
     __tablename__ = 'Rubrics'
     id = Column(Integer, primary_key=True)
@@ -44,7 +38,6 @@ class Rubrics(Base):
 class Evaluation(Base):
     __tablename__ = 'Evaluation'
     id = Column(Integer, primary_key=True)
-    Course = Column(Integer, ForeignKey('Courses.id'), nullable=False)
     Week = Column(Integer)
     EvaluateeID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
     EvaluatorID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
@@ -57,7 +50,6 @@ class Evaluation(Base):
 class Grade(Base):
     __tablename__ = 'Grade'
     id = Column(Integer, primary_key=True)
-    Course = Column(Integer, ForeignKey('Courses.id'), nullable=False)
     Week = Column(Integer)
     EvaluateeID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
     EvaluateeName = Column(String(100), nullable=False)
@@ -75,7 +67,6 @@ class Grade(Base):
 class TotalGrade(Base):
     __tablename__ = 'TotalGrade'
     id = Column(Integer, primary_key=True)
-    Course = Column(Integer, ForeignKey('Courses.id'), nullable=False)
     Week = Column(Integer)
     EvaluateeID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
     EvaluateeName = Column(String(100), nullable=False)
@@ -94,7 +85,6 @@ class TotalGrade(Base):
 class AverageGrade(Base):
     __tablename__ = 'AverageGrade'
     id = Column(Integer, primary_key=True)
-    Course = Column(Integer, ForeignKey('Courses.id'), nullable=False)
     Week = Column(Integer)
     StudentGroup =  Column(Integer, ForeignKey('Groups.id'))
     KnowledgeAcquisition = Column(String(100))
@@ -110,7 +100,6 @@ class SubmitRecord(Base):
     __tablename__ = 'SubmitRecord'
     id = Column(Integer, primary_key=True)
     Evaluator = Column(String(100), nullable=False)
-    Course = Column(Integer, ForeignKey('Courses.id'), nullable=False)
     Week = Column(Integer)
     InputDate = Column(DateTime, nullable = False)
 
@@ -120,4 +109,6 @@ class Loginlogs(Base):
     Username = Column(String(100), nullable=False)
     Ip = Column(String(100), nullable=False)
     InputDate = Column(DateTime, nullable = False)
+
+
 
