@@ -131,12 +131,14 @@
                     </select>                
                 </td>
             </tr>
+            <!--
             <tr>
                 <td colspan = 4>
                 <button id ="summarizeEvaluation" type="button" @click="summarizeEvaluation">summarizeEvaluation</button>
                 <span v-html = "summarizeWorkState"></span>
                 </td>
             </tr>
+            -->
             <tr>
                 <td>
                     INweight:<input v-model = "INweight" placeholder = "Inweight">
@@ -208,6 +210,7 @@
                 courseList:<?php echo json_encode($_SESSION['courseList'])?>
             },
             methods:{
+                /*
                 summarizeEvaluation:function(){
                     var params = new URLSearchParams();
                     params.append('week',this.week);
@@ -221,6 +224,7 @@
 
                     });
                 },
+                */
                 calcTotalGrade:function(){
                     var params = new URLSearchParams();
                     params.append('week',this.week);
