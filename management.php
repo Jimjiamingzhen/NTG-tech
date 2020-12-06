@@ -239,6 +239,7 @@
                     var that = this;
                     axios.post('statistics.php',params).then(function(response){
                         that.calcTotalGradeWorkState = "Done";
+                        window.open("RESULT/" + that.course + "WEEK" + that.week + ".zip");
                         console.log(response.data);
                     });
                 }

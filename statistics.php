@@ -25,6 +25,7 @@
     else{
     }
     */
+
     exec("python summarizeEvaluation.py $course $week");
     $INweight = isset($_POST['INweight']) ? $_POST['INweight'] : "?";
     $TAweight = isset($_POST['TAweight']) ? $_POST['TAweight'] : "?";
@@ -39,6 +40,8 @@
         exec("python totalGrade.py $course $week $INweight $TAweight $STweight");
 
     }
-    exec("python generateZip.py $course $week $INweight $TAweight $STweight");
+    exec("python radarMap.py $course $week");
+    exec("python generateZip.py $course $week");
+
 
 ?>

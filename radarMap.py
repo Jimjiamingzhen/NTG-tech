@@ -8,6 +8,8 @@ from pyecharts.charts import Radar, Page
 from pyecharts.components import Table, Image
 from pyecharts import options as opts
 import numpy
+import sys
+import os
 
 def radar(student, studentName, course, week, studentScore, avgScore, commentTA, commentIN, dir):
     page = Page(page_title='%s %s WEEK%d 评分'%(studentName, course, week),layout=Page.SimplePageLayout)
@@ -42,15 +44,12 @@ def radar(student, studentName, course, week, studentScore, avgScore, commentTA,
 
     page.add(radarChart)
     page.add(table)
-    page.render("%s\%dWEEK%d.html"%(dir, student, week))
+    page.render("%s/%dWEEK%d.html"%(dir, student, week))
 
-def generateRadarMap(session, student, week, course):
-    courseid = session.query(db_classes.Courses).filter(
-                            db_classes.Courses.CourseID == course).first().id
+def generateRadarMap(session, student, week, course, path):
     gradeRecord = session.query(db_classes.TotalGrade).filter(
         sqlalchemy.and_(db_classes.TotalGrade.EvaluateeID == student,
-                        db_classes.TotalGrade.Week == week,
-                        db_classes.TotalGrade.Course == courseid)).first()
+                        db_classes.TotalGrade.Week == week)).first()
     studentName = gradeRecord.EvaluateeName
     K = gradeRecord.KnowledgeAcquisition
     M = gradeRecord.Motivation
@@ -63,7 +62,6 @@ def generateRadarMap(session, student, week, course):
 
     Average = session.query(db_classes.AverageGrade).filter(
         sqlalchemy.and_(db_classes.AverageGrade.Week == week,
-                        db_classes.AverageGrade.Course == courseid,
                         db_classes.AverageGrade.StudentGroup == 6)).first()
     AK = Average.KnowledgeAcquisition
     AM = Average.Motivation
@@ -77,7 +75,6 @@ def generateRadarMap(session, student, week, course):
     commentTAQuery = session.query(db_classes.Evaluation.Comment).filter(
         sqlalchemy.and_(db_classes.Evaluation.EvaluateeID == student,
                         db_classes.Evaluation.Week == week,
-                        db_classes.Evaluation.Course == courseid,
                         db_classes.Evaluation.Source == 2)).all()
     commentTA = []
     for comment in commentTAQuery:
@@ -89,7 +86,6 @@ def generateRadarMap(session, student, week, course):
     commentINQuery = session.query(db_classes.Evaluation.Comment).filter(
         sqlalchemy.and_(db_classes.Evaluation.EvaluateeID == student,
                         db_classes.Evaluation.Week == week,
-                        db_classes.Evaluation.Course == courseid,
                         db_classes.Evaluation.Source == 3)).all()
     commentIN = []
     for comment in commentINQuery:
@@ -97,19 +93,29 @@ def generateRadarMap(session, student, week, course):
             commentIN.append(" ")
         else:
             commentIN.append(comment[0])
-    radar(student, studentName, course, week, studentScore, avgScore, commentTA, commentIN, r'.\radarMaps\WEEK%d' % week)
+    
+    radar(student, studentName, course, week, studentScore, avgScore, commentTA, commentIN, path)
 
 if __name__ == '__main__':
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + dbinfo.database
+
+    args = sys.argv #[filename, course, week]
+    course = args[1]
+    week = int(args[2])
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + course
     engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
     Session = sessionmaker(bind=engine)
     session = Session()
+
     personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
     studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(db_classes.Persons.PersonRole == 1).all()[0][0]
-    week = 4
-    course = 'SDM242'
+
+    folder = r'/opt/lampp/htdocs/SDM202/RESULT'
+    tempPath = os.path.join(folder, r"temp")
+    os.mkdir(tempPath)
+    radarMapPath = os.path.join(tempPath, r"radarMap") 
+    os.mkdir(radarMapPath)
     for student in range(personNumber - studentNumber + 1, personNumber + 1):
-        generateRadarMap(session, student, week, course)
+        generateRadarMap(session, student, week, course, radarMapPath)
 
 
 
