@@ -62,15 +62,28 @@
 </head>
 
 <body>
-    
-    <div id = "titleOfWeb" style = "width:100%;height:200px;background-color:#FFA500;">
-        <h1>SDIM</h1>
-        <p>Current User: <?php echo $_SESSION['user'];?> </p>
-        <p>Role: administrator</p>
-        <button id ="logout" type="button" onclick="logout()">Logout</button>
-        <button id ="headToScoringSheet" type="button" onclick="self.location = 'administratorScoringSheet.php';">Scoring Sheet</button>
+    <div id = "titleOfWeb" style = "width:100%;height:50px;background-color:#A79DA5;">
+        <div id = "headBlank1" style ="width:10%;height:50px;float:left;">
+        </div>
+        <div id = "headBlank2" style ="width:20%;height:50px;float:left;">
+            <img src="SDIM.svg" alt="SDIM LOGO" width="150">
+        </div>
+        <div id = "headBlank3" style ="width:10%;height:50px;float:left;">
+        </div>
+        <div id = "headBlank4" style ="width:20%;height:50px;float:left;">
+            <h1 style = "text-align: center; font-size:20px;">SDIM分数管理</h1>
+        </div>
+        <div id = "headBlank5" style ="width:20%;height:50px;float:left;font-size:10px;line-height:10px;text-align: center;">
+            <p>Current User: <?php echo $_SESSION['user'];?> </p>
+            <p>Role: Administrator</p>
+        </div>
+        <div id = "headBlank6"  style ="width:10%;height:50px;float:left;position:relative;">
+            <button id ="logout" type="button" onclick="logout()" style = "width:80%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Logout</button>
+        </div>
+        <div id = "headBlank7" style ="width:10%;height:50px;float:left;position:relative;">
+            <button id ="headToScoringSheet" type="button" onclick="self.location = 'administratorScoringSheet.php';"style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Scoring</button>
+        </div>
     </div>
-
     <div id = "blank" style = "width:100%;height:50px;">
 
     </div>

@@ -80,14 +80,28 @@
 </head>
 <body>
     <!-- HEAD -->   
-    <div id = "titleOfWeb" style = "width:100%;height:200px;background-color:#FFA500;">
-        <h1>SDIM</h1>
-        <p>Current User: <?php echo $_SESSION['user'];?> </p>
-        <p>Role: administrator</p>
-        <button id ="logout" type="button" onclick="logout()">Logout</button>
-        <button id ="headToManagement" type="button" onclick="self.location = 'management.php';">Management</button>
+    <div id = "titleOfWeb" style = "width:100%;height:50px;background-color:#A79DA5;">
+        <div id = "headBlank1" style ="width:10%;height:50px;float:left;">
+        </div>
+        <div id = "headBlank2" style ="width:20%;height:50px;float:left;">
+            <img src="SDIM.svg" alt="SDIM LOGO" width="150">
+        </div>
+        <div id = "headBlank3" style ="width:10%;height:50px;float:left;">
+        </div>
+        <div id = "headBlank4" style ="width:20%;height:50px;float:left;">
+            <h1 style = "text-align: center; font-size:20px;">SDIM分数管理</h1>
+        </div>
+        <div id = "headBlank5" style ="width:20%;height:50px;float:left;font-size:10px;line-height:10px;text-align: center;">
+            <p>Current User: <?php echo $_SESSION['user'];?> </p>
+            <p>Role: Administrator</p>
+        </div>
+        <div id = "headBlank6"  style ="width:10%;height:50px;float:left;position:relative;">
+            <button id ="logout" type="button" onclick="logout()" style = "width:80%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Logout</button>
+        </div>
+        <div id = "headBlank7" style ="width:10%;height:50px;float:left;position:relative;">
+            <button id ="headToManagement" type="button" onclick="self.location = 'management.php';" style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Management</button>
+        </div>
     </div>
-
     <!-- BLANK -->  
     <div id = "blank" style = "width:100%;height:50px;">
         <p></p>
@@ -142,7 +156,7 @@
                 date:"",
                 rubrics:['Knowledge Acquisition','Motivation','Communication','Hands-on Skills', 'Thinking Skills','Responsibility','Project Execution'],
                 course:"",
-                alertText:"啊哈",
+                alertText:"Response：",
                 errorCount:0,
                 submitAllowed:true,
                 courseList:<?php echo json_encode($_SESSION['courseList'])?>
@@ -193,7 +207,7 @@
                     function validateScore(personRecord, rubricsNumber, that){
                         invalid=[];
                         for (var i = 0; i < rubricsNumber; i++){
-                            if(personRecord.score[i]<0 || personRecord.score[i]>5 || isNaN(personRecord.score[i])){
+                            if(personRecord.score[i]<=0 || personRecord.score[i]>5 || isNaN(personRecord.score[i])){
                                 that.submitAllowed = false;
                                 invalid.push(i);
                                 that.errorCount+=1;
