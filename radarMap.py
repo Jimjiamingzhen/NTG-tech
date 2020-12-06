@@ -106,16 +106,16 @@ if __name__ == '__main__':
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
-    studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(db_classes.Persons.PersonRole == 1).all()[0][0]
+    students = session.query(db_classes.Persons.id).filter(db_classes.Persons.PersonRole == 1).all()
 
     folder = r'/opt/lampp/htdocs/SDM202/RESULT'
     tempPath = os.path.join(folder, r"temp")
     os.mkdir(tempPath)
     radarMapPath = os.path.join(tempPath, r"radarMap") 
     os.mkdir(radarMapPath)
-    for student in range(personNumber - studentNumber + 1, personNumber + 1):
-        generateRadarMap(session, student, week, course, radarMapPath)
+    for student in students:
+        studentid = student[0]
+        generateRadarMap(session, studentid, week, course, radarMapPath)
 
 
 

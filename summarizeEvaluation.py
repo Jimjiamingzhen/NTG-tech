@@ -54,9 +54,9 @@ if __name__=='__main__':
     session = Session()
 
     session.query(db_classes.Grade).filter(db_classes.Grade.Week == week).delete()
-    personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
-    studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(
-        db_classes.Persons.PersonRole == 1).all()[0][0]
+    students = session.query(db_classes.Persons.id).filter(db_classes.Persons.PersonRole == 1).all()
+
     for role in range(1, len(constants.ROLES) + 1):
-        for student in range(personNumber - studentNumber + 1, personNumber + 1):
-            summarizeEvaluations(session, student, role, week)
+        for student in students:
+            studentid = student[0]
+            summarizeEvaluations(session, studentid, role, week)

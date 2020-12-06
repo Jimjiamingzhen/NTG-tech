@@ -78,9 +78,7 @@ if __name__=='__main__':
     engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
     Session = sessionmaker(bind=engine)
     session = Session()
-    personNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).all()[0][0]
-    studentNumber = session.query(sqlalchemy.func.count(db_classes.Persons.id)).filter(
-        db_classes.Persons.PersonRole == 1).all()[0][0]
+    students = session.query(db_classes.Persons.id).filter(db_classes.Persons.PersonRole == 1).all()
     weightIN = float(args[3])
     weightTA = float(args[4])
     weightST = float(args[5])
@@ -89,9 +87,9 @@ if __name__=='__main__':
     session.query(db_classes.TotalGrade).filter(db_classes.TotalGrade.Week == week).delete()
     session.query(db_classes.AverageGrade).filter(sqlalchemy.and_(db_classes.AverageGrade.Week == week, db_classes.AverageGrade.StudentGroup == 6)).delete()
 
-    for student in range(personNumber - studentNumber + 1, personNumber + 1):
-        print(student)
-        calcTotalGrade(session, student, week, weightST, weightTA, weightIN)
+    for student in students:
+        studentid = student[0]
+        calcTotalGrade(session, studentid, week, weightST, weightTA, weightIN)
 
     calcTotalAvg(session, week)
 
