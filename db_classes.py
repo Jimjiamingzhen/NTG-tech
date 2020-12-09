@@ -14,7 +14,6 @@ class Persons(Base):
     Affiliation = Column(String(100))
     StudentGroup = Column(Integer, ForeignKey('Groups.id'))
     PersonRole = Column(Integer, ForeignKey('Roles.id'))
-    IDInGroup = Column(Integer)
     Password = Column(String(15))
     def __repr__(self):
         return '<Person %r>' % self.PersonName
@@ -43,7 +42,6 @@ class Evaluation(Base):
     EvaluatorID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
     RubricsItem = Column(Integer, ForeignKey('Rubrics.id'))
     Score = Column(String(100), nullable=False)
-    Comment = Column(String(1000), nullable=False)
     InputDate = Column(DateTime, nullable = False)
     Source = Column(Integer, ForeignKey('Roles.id'), nullable=False)
 
@@ -108,6 +106,16 @@ class Loginlogs(Base):
     id = Column(Integer, primary_key=True)
     Username = Column(String(100), nullable=False)
     Ip = Column(String(100), nullable=False)
+    InputDate = Column(DateTime, nullable = False)
+
+class Comments(Base):
+    __tablename__ = 'Comments'
+    id = Column(Integer, primary_key=True)
+    Week = Column(Integer)
+    EvaluateeID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
+    EvaluatorID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
+    Comment = Column(String(1000), nullable=False)
+    Source = Column(Integer, ForeignKey('Roles.id'), nullable=False)
     InputDate = Column(DateTime, nullable = False)
 
 

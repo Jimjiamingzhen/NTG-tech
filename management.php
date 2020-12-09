@@ -256,9 +256,10 @@
                         console.log(response.data);
                     });
                 }
-            }
-        
-        
+            },
+            created(){
+                    this.course = this.courseList[0];
+                }
         })
     </script>
 </body>

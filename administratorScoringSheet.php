@@ -176,7 +176,7 @@
                                 for (group in evaluateeNames){
                                     groupEvaluations = new Array();
                                     for(person in evaluateeNames[group]){
-                                        groupEvaluations.push({evaluatee : evaluateeNames[group][person], score:[1,2,3,1,2,3,1], comment:"", valid:[true,true,true,true,true,true,true]});
+                                        groupEvaluations.push({evaluatee : evaluateeNames[group][person], score:["","","","","","",""], comment:"", valid:[true,true,true,true,true,true,true]});
                                     }
                                     that.evaluations.push(groupEvaluations);
                                 } 
@@ -240,6 +240,29 @@
                         }
 
                     }
+
+                    function validateComment(comment,that){
+        
+                        var sqlStr=sql_str().split(',');
+                        
+                        for(var i=0;i<sqlStr.length;i++){
+                            if(comment.toLowerCase().indexOf(sqlStr[i])!=-1){
+                                that.submitAllowed = false;
+                                that.errorCount+=1;
+                                alertContent = '<br>error' + that.errorCount + ':illegal words in comment: ' + sqlStr[i];
+                                that.alertText+=alertContent;
+                                that.commentValid = false;
+                                break;
+                            }
+                        }
+                        console.log('done');
+                    }
+
+                    function sql_str(){
+                        var str="and,delete,or,exec,insert,select,union,update,count,*,',join,>,<";
+                        return str;
+                    }
+
                     var evaluationsToSubmit = [];
                     var evaluations = this.evaluations;
                     var that = this;
@@ -257,6 +280,7 @@
                                 this.evaluations[group][person].valid[invalid[i]] = false;
                                 this.$forceUpdate();
                             }
+                            validateComment(personRecord.comment,that);
                             evaluationsToSubmit.push(
                                 new Evaluation(
                                     this.week, this.evaluator, personRecord.evaluatee, 
@@ -285,6 +309,7 @@
             },
             created(){
                     this.getEvaluatees();
+                    this.course = this.courseList[0];
                 }
             })
     </script>

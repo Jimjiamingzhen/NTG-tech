@@ -53,20 +53,23 @@
         $inputDate = $evaluation -> {'InputDate'};
         $dataSource = $evaluator['PersonRole'];
         $scores = array($evaluation -> {'K'}, $evaluation -> {'M'}, $evaluation -> {'C'},$evaluation -> {'H'},$evaluation -> {'T'},$evaluation -> {'R'},$evaluation -> {'P'});
+        $comment = $evaluation ->{'comment'};
         $sql = "";
+        if(!empty($comment)){
+            $commentsql = "INSERT INTO `Comments` VALUES (NULL, $week, $evaluateeId, $evaluatorId, '$comment', $dataSource, '$inputDate');";
+            $conn -> query($commentsql);
+        }
         for ($rubrics = 0; $rubrics < 7; $rubrics++ ){
             $rubricsItem = $rubrics + 1;
             $score = $scores[$rubrics];
-            $sql .= "INSERT INTO `Evaluation` VALUES (NULL, $week, $evaluateeId, $evaluatorId, $rubricsItem, '$score', '', '$inputDate', $dataSource);";
+            $sql .= "INSERT INTO `Evaluation` VALUES (NULL, $week, $evaluateeId, $evaluatorId, $rubricsItem, '$score', '$inputDate', $dataSource);";
         }
         if ($conn->multi_query($sql) === TRUE) {            
             while ($conn->more_results() && $conn->next_result())
             {
                 //什么也不做
             }
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }      
+        }
 
     }
     function addSubmitRecord($conn, $evaluation){

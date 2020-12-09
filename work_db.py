@@ -57,10 +57,9 @@ for person in person_list:
         new_person.PersonNameE = person.PersonNameE
         new_person.Email = person.Email
         new_person.Affiliation = person.Affiliation
-        new_person.IDInGroup = int(person.IDInGroup)
         new_person.StudentGroup = session.query(db_classes.Groups.id).filter_by(GroupID=str(person.StudentGroup)).first()[0]
         new_person.PersonRole = session.query(db_classes.Roles.id).filter_by(RoleName=person.PersonRole).first()[0]
-        new_person.Password = "Q1"
+        new_person.Password = str(person.PersonID)
         session.add(new_person)
 session.commit()
 
@@ -89,7 +88,7 @@ for person in person_list:
         new_person.PersonNameE = person.PersonNameE
         new_person.Email = person.Email
         new_person.Affiliation = person.Affiliation
-        new_person.Password = "Q1"
+        new_person.Password = str(person.PersonID)
         session_SDIM.add(new_person)
 session_SDIM.commit()
 

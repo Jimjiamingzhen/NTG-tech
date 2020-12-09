@@ -156,7 +156,7 @@
                 alertText:"Response：",
                 errorCount:0,
                 submitAllowed:true,
-                courseList:<?php echo json_encode($_SESSION['courseList'])?>
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>,
             },
             methods:{
                 getEvaluatees:function(){
@@ -171,7 +171,7 @@
                                 console.log(response.data);
                                 var evaluateeNames = response.data;
                                 for (person in evaluateeNames){
-                                that.evaluations.push({evaluatee : evaluateeNames[person], score:[1,2,3,1,2,3,1], comment:"", valid:[true,true,true,true,true,true,true]});
+                                that.evaluations.push({evaluatee : evaluateeNames[person], score:["1","1","1","1","1","1","1"], comment:"", valid:[true,true,true,true,true,true,true]});
                                 }
                                 console.log(that.evaluations);
                             }
@@ -197,6 +197,7 @@
                         this.InputDate = date;
                         this.comment = comment;
                     }
+
                     function validateScore(personRecord, rubricsNumber, that){
                         invalid=[];
                         for (var i = 0; i < rubricsNumber; i++){
@@ -224,6 +225,7 @@
                         }
 
                     }
+
                     function validateCourse(that){
                         if(that.course == ""){
                             that.submitAllowed = false;
@@ -233,6 +235,28 @@
                         }
 
                     }
+
+                    function validateComment(comment,that){
+        
+                        var sqlStr=sql_str().split(',');
+                        
+                        for(var i=0;i<sqlStr.length;i++){
+                            if(comment.toLowerCase().indexOf(sqlStr[i])!=-1){
+                                that.submitAllowed = false;
+                                that.errorCount+=1;
+                                alertContent = '<br>error' + that.errorCount + ':illegal words in comment: ' + sqlStr[i];
+                                that.alertText+=alertContent;
+                                that.commentValid = false;
+                                break;
+                            }
+                        }
+                        console.log('done');
+                    }
+
+                    function sql_str(){
+                        var str="and,delete,or,exec,insert,select,union,update,count,*,',join,>,<";
+                        return str;
+                    }
                     var evaluationsToSubmit = [];
                     var evaluations = this.evaluations;
                     var that = this;
@@ -240,6 +264,7 @@
                     this.alertText = "";
                     this.submitAllowed = true;
                     this.weekValid = true;
+                    
                     validateWeek(this.week, that);
                     validateCourse(that);
                     for(person in evaluations){
@@ -249,6 +274,7 @@
                             this.evaluations[person].valid[invalid[i]] = false;
                             this.$forceUpdate();
                         }
+                        validateComment(personRecord.comment,that);
                         evaluationsToSubmit.push(
                             new Evaluation(
                                 this.week, this.evaluator, personRecord.evaluatee, 
@@ -272,10 +298,11 @@
                         this.alertText += '<br>Submit fail';
                     }
 
-                }
+                },
             },
             created(){
                     this.getEvaluatees();
+                    this.course = this.courseList[0];
                 }
             })
     </script>
