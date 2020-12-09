@@ -17,13 +17,20 @@ def groupAverage(session, week):
             groupMembers.append(groupMembersQuery[i][0])
         print(groupMembers)
         print(session.query(sqlalchemy.func.avg(db_classes.Grade.KnowledgeAcquisition)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all())
-        new_average.KnowledgeAcquisition = round(session.query(sqlalchemy.func.avg(db_classes.Grade.KnowledgeAcquisition)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
-        new_average.Motivation = round(session.query(sqlalchemy.func.avg(db_classes.Grade.Motivation)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
-        new_average.Communication = round(session.query(sqlalchemy.func.avg(db_classes.Grade.Communication)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
-        new_average.HandsOnSkills = round(session.query(sqlalchemy.func.avg(db_classes.Grade.HandsOnSkills)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
-        new_average.ThinkingSkills = round(session.query(sqlalchemy.func.avg(db_classes.Grade.ThinkingSkills)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
-        new_average.Responsibility = round(session.query(sqlalchemy.func.avg(db_classes.Grade.Responsibility)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
-        new_average.ProjectExecution = round(session.query(sqlalchemy.func.avg(db_classes.Grade.ProjectExecution)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0], 2)
+        K = session.query(sqlalchemy.func.avg(db_classes.Grade.KnowledgeAcquisition)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        M = session.query(sqlalchemy.func.avg(db_classes.Grade.Motivation)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        C = session.query(sqlalchemy.func.avg(db_classes.Grade.Communication)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        H = session.query(sqlalchemy.func.avg(db_classes.Grade.HandsOnSkills)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        T = session.query(sqlalchemy.func.avg(db_classes.Grade.ThinkingSkills)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        R = session.query(sqlalchemy.func.avg(db_classes.Grade.Responsibility)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        P = session.query(sqlalchemy.func.avg(db_classes.Grade.ProjectExecution)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+        new_average.KnowledgeAcquisition = round(K, 2) if K is not None else 0
+        new_average.Motivation = round(M, 2) if M is not None else 0
+        new_average.Communication = round(C, 2) if C is not None else 0
+        new_average.HandsOnSkills = round(H, 2) if H is not None else 0
+        new_average.ThinkingSkills = round(T, 2) if T is not None else 0
+        new_average.Responsibility = round(R, 2) if R is not None else 0
+        new_average.ProjectExecution = round(P, 2) if P is not None else 0
         new_average.InputDate = time.strftime("%Y-%m-%d")
         session.add(new_average)
         session.commit()

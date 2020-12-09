@@ -176,7 +176,7 @@
                                 for (group in evaluateeNames){
                                     groupEvaluations = new Array();
                                     for(person in evaluateeNames[group]){
-                                        groupEvaluations.push({evaluatee : evaluateeNames[group][person], score:["","","","","","",""], comment:"", valid:[true,true,true,true,true,true,true]});
+                                        groupEvaluations.push({evaluatee : evaluateeNames[group][person], score:["1","1","1","1","1","1","1"], comment:"", valid:[true,true,true,true,true,true,true]});
                                     }
                                     that.evaluations.push(groupEvaluations);
                                 } 

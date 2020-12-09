@@ -7,7 +7,7 @@ import time
 import sys
 
 def calcTotalGrade(session, student, week, weightST, weightTA, weightIN, weightSTTA, weightSTIN):
-    ScoreST = session.query(db_classes.Grade).filter(
+    scoreST = session.query(db_classes.Grade).filter(
         sqlalchemy.and_(db_classes.Grade.EvaluateeID == student,
                         db_classes.Grade.DataSource == 1,
                         db_classes.Grade.Week == week)).first()
@@ -20,19 +20,19 @@ def calcTotalGrade(session, student, week, weightST, weightTA, weightIN, weightS
                         db_classes.Grade.DataSource == 3,
                         db_classes.Grade.Week == week)).first()
     studentGroup = session.query(db_classes.Persons.StudentGroup).filter(db_classes.Persons.id == student).first()[0]
-    ScoreSTAvg = session.query(db_classes.AverageGrade).filter(
+    scoreSTAvg = session.query(db_classes.AverageGrade).filter(
         sqlalchemy.and_(db_classes.AverageGrade.StudentGroup == studentGroup,
                         db_classes.AverageGrade.Week == week)).first()
     rubricsNumber = session.query(sqlalchemy.func.count(db_classes.Rubrics.id)).first()[0]
     totalScore = []
     for rubricsItem in range(1, rubricsNumber + 1):
         rubricsName = session.query(db_classes.Rubrics.RubricsName).filter(db_classes.Rubrics.id == rubricsItem).first()[0]
-        itemScoreST = getattr(ScoreST, rubricsName)
-        itemScoreSTAvg = getattr(ScoreSTAvg, rubricsName)
-        itemScoreTA = getattr(scoreTA, rubricsName)
-        itemScoreIN = getattr(scoreIN, rubricsName)
-        itemScoreSTFinal = weightSTTA * float(itemScoreTA) + weightSTIN * float(itemScoreIN) + float(itemScoreST) - float(itemScoreSTAvg) if ((itemScoreST and itemScoreTA and itemScoreIN) is not None) else None
-        weightedScore = weightST * float(itemScoreSTFinal) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN) if ((itemScoreST and itemScoreTA and itemScoreIN) is not None) else None
+        itemScoreST = getattr(scoreST, rubricsName) if getattr(scoreST, rubricsName) is not None else 0
+        itemScoreSTAvg = getattr(scoreSTAvg, rubricsName) if getattr(scoreSTAvg, rubricsName) is not None else 0
+        itemScoreTA = getattr(scoreTA, rubricsName) if getattr(scoreTA, rubricsName) is not None else 0
+        itemScoreIN = getattr(scoreIN, rubricsName) if getattr(scoreIN, rubricsName) is not None else 0
+        itemScoreSTFinal = weightSTTA * float(itemScoreTA) + weightSTIN * float(itemScoreIN) + float(itemScoreST) - float(itemScoreSTAvg)
+        weightedScore = weightST * float(itemScoreSTFinal) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN)
         totalScore.append(weightedScore)
     new_totalGrade = db_classes.TotalGrade()
     new_totalGrade.Week = week

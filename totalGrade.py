@@ -6,7 +6,7 @@ import constants
 import time
 import sys
 def calcTotalGrade(session, student, week, weightST, weightTA, weightIN):
-    ScoreST = session.query(db_classes.Grade).filter(
+    scoreST = session.query(db_classes.Grade).filter(
         sqlalchemy.and_(db_classes.Grade.EvaluateeID == student,
                         db_classes.Grade.DataSource == 1,
                         db_classes.Grade.Week == week)).first()
@@ -22,10 +22,10 @@ def calcTotalGrade(session, student, week, weightST, weightTA, weightIN):
     totalScore = []
     for rubricsItem in range(1, rubricsNumber + 1):
         rubricsName = session.query(db_classes.Rubrics.RubricsName).filter(db_classes.Rubrics.id == rubricsItem).first()[0]
-        itemScoreST = getattr(ScoreST, rubricsName)
-        itemScoreTA = getattr(scoreTA, rubricsName)
-        itemScoreIN = getattr(scoreIN, rubricsName)
-        weightedScore = weightST * float(itemScoreST) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN) if ((itemScoreST and itemScoreTA and itemScoreIN) is not None) else None
+        itemScoreST = getattr(scoreST, rubricsName) if getattr(scoreST, rubricsName) is not None else 0
+        itemScoreTA = getattr(scoreTA, rubricsName) if getattr(scoreTA, rubricsName) is not None else 0
+        itemScoreIN = getattr(scoreIN, rubricsName) if getattr(scoreIN, rubricsName) is not None else 0
+        weightedScore = weightST * float(itemScoreST) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN)
         totalScore.append(weightedScore)
     new_totalGrade = db_classes.TotalGrade()
     new_totalGrade.Week = week

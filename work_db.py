@@ -11,7 +11,7 @@ import pandas as pd
 import db_classes_SDIM
 import time
 
-course = 'SDM232'
+course = 'SDM242'
 # %% connect engine
 SQLALCHEMY_DATABASE_URI_COURSE = 'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + course
 engine_course = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI_COURSE, echo=True)

@@ -34,3 +34,10 @@ class Roles(Base):
     __tablename__ = 'Roles'
     id = Column(Integer, primary_key=True)
     RoleName = Column(String(100), nullable=False)
+
+class Loginlogs(Base):
+    __tablename__ = 'Loginlogs'
+    id = Column(Integer, primary_key=True)
+    Username = Column(String(100), nullable=False)
+    Ip = Column(String(100), nullable=False)
+    InputDate = Column(DateTime, nullable = False)

@@ -101,12 +101,6 @@ class SubmitRecord(Base):
     Week = Column(Integer)
     InputDate = Column(DateTime, nullable = False)
 
-class Loginlogs(Base):
-    __tablename__ = 'Loginlogs'
-    id = Column(Integer, primary_key=True)
-    Username = Column(String(100), nullable=False)
-    Ip = Column(String(100), nullable=False)
-    InputDate = Column(DateTime, nullable = False)
 
 class Comments(Base):
     __tablename__ = 'Comments'
