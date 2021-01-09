@@ -3,7 +3,7 @@
     $evaluationsInJson = htmlspecialchars_decode(isset($_POST['evaluationData']) ? htmlspecialchars($_POST['evaluationData']) : '');
     $course = htmlspecialchars_decode(isset($_POST['course']) ? htmlspecialchars($_POST['course']) : '');
     $evaluations = json_decode($evaluationsInJson);
-    $servername = "39.102.86.62";
+    $servername = "39.102.54.216";
     $username = "root";
     $password = "2788098";
     $dbname = $course;

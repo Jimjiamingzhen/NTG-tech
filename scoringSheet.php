@@ -24,7 +24,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SDIM</title>
 
      <style>
         table{
@@ -171,7 +171,7 @@
                                 console.log(response.data);
                                 var evaluateeNames = response.data;
                                 for (person in evaluateeNames){
-                                that.evaluations.push({evaluatee : evaluateeNames[person], score:["1","1","1","1","1","1","1"], comment:"", valid:[true,true,true,true,true,true,true]});
+                                that.evaluations.push({evaluatee : evaluateeNames[person], score:["","","","","","",""], comment:"", valid:[true,true,true,true,true,true,true]});
                                 }
                                 console.log(that.evaluations);
                             }

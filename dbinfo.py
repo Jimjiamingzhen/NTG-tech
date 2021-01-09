@@ -1,11 +1,11 @@
-
-host = '39.102.86.62:3306'
+'''
+host = '39.102.54.216:3306'
 #database = 'SDM202'
 user = 'root'
 password = '2788098'
 '''
+
 host = '127.0.0.1:3307'
-database = 'wk10'
+database = 'SDM272'
 user = 'root'
 password = '2788098'
-'''

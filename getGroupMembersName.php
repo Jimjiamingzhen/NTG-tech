@@ -1,7 +1,7 @@
 <?php
 $evaluator = isset($_POST['evaluator']) ? htmlspecialchars($_POST['evaluator']) : '';
 $course = isset($_POST['course']) ? htmlspecialchars($_POST['course']) : '';
-$servername = "39.102.86.62";
+$servername = "39.102.54.216";
 $username = "root";
 $password = "2788098";
 $dbname = $course;

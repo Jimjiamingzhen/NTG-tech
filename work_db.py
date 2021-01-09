@@ -10,12 +10,17 @@ import constants
 import pandas as pd
 import db_classes_SDIM
 import time
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
-course = 'SDM242'
+course = 'SDM272'
 # %% connect engine
 SQLALCHEMY_DATABASE_URI_COURSE = 'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + course
 engine_course = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI_COURSE, echo=True)
 # %% Create database from classes
+for item in constants.RUBRICS:
+    setattr(db_classes.Grade, item, Column(String(100)))
+    setattr(db_classes.TotalGrade, item, Column(String(100)))
+    setattr(db_classes.AverageGrade, item, Column(String(100)))
 Base.metadata.create_all(engine_course)
 
 
@@ -45,7 +50,7 @@ for rubric in constants.RUBRICS:
 session.commit()
 
 # %% initiate the students
-person_file = './studentIDinfo.csv'
+person_file = './studentIDinfo272.csv'
 person_data = pd.read_csv(person_file) 
 person_list = [person_data.iloc[i] for i in range(len(person_data['PersonID']))]
 print('--------------------------')
@@ -68,10 +73,6 @@ SQLALCHEMY_DATABASE_URI_SDIM = 'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.p
 engine_SDIM = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI_SDIM, echo=True)
 Session_SDIM = sessionmaker(bind=engine_SDIM)
 session_SDIM = Session_SDIM()
-
-person_file = './studentIDinfo.csv'
-person_data = pd.read_csv(person_file)
-person_list = [person_data.iloc[i] for i in range(len(person_data['PersonID']))]
 
 for person in person_list:
     new_election = db_classes_SDIM.ElectiveLog()

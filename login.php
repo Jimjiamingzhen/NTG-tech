@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>登录</title>
+        <title>SDIM</title>
         <meta charset="UTF-8">
         <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <style>
@@ -37,7 +37,7 @@
         }  
         .inform{   
             width: 100px;
-            color: #9e9d9d;   
+            color: #1F1C18;   
             border-top: 1px solid #312E3D;   
             border-left: 1px solid #312E3D;   
             border-right: 1px solid #312E3D;   
@@ -47,7 +47,7 @@
         }  
         select{   
             width: 106px;
-            color: #9e9d9d;   
+            color: #1F1C18;   
             border-top: 1px solid #312E3D;   
             border-left: 1px solid #312E3D;   
             border-right: 1px solid #312E3D;   
@@ -157,7 +157,7 @@
                         </td> 
                     </tr> 
                     <tr> 
-                        <td colspan="2" align="center">SDIM评价统计</td>
+                        <td colspan="2" align="center">SDIM评价统计 Alpha</td>
                     </tr> 
                 </table> 
             </form> 

@@ -1,7 +1,7 @@
 <?php
     $weekNumber = isset($_POST['weekNumber']) ? $_POST['weekNumber'] : "?";
     $course = isset($_POST['course']) ? $_POST['course'] : "?";
-    $servername = "39.102.86.62";
+    $servername = "39.102.54.216";
     $username = "root";
     $password = "2788098";
     $dbname = $course;

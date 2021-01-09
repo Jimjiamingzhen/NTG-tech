@@ -93,14 +93,14 @@ def generateRadarMap(session, student, week, course, path):
                         db_classes.Comments.Source == 3)).all()
     commentor = []
     comment = []
+    for commentIN in commentINQuery:
+        INname = session.query(db_classes.Persons.PersonName).filter(db_classes.Persons.id == commentIN.EvaluatorID).first()[0]
+        commentor.append(INname)
+        comment.append(commentIN.Comment)
     for commentTA in commentTAQuery:
         TAname = session.query(db_classes.Persons.PersonName).filter(db_classes.Persons.id == commentTA.EvaluatorID).first()[0]
         commentor.append(TAname)
         comment.append(commentTA.Comment)
-    for commentIN in commentINQuery:
-        INname = session.query(db_classes.Persons.PersonName).filter(db_classes.Persons.id == commentTA.EvaluatorID).first()[0]
-        commentor.append(INname)
-        comment.append(commentIN.Comment)
     radar(student, studentName, course, week, studentScore, avgScore, commentor, comment, path)
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 import sqlalchemy
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+import constants
 
 Base = declarative_base()
 
@@ -51,6 +52,7 @@ class Grade(Base):
     Week = Column(Integer)
     EvaluateeID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
     EvaluateeName = Column(String(100), nullable=False)
+    '''
     KnowledgeAcquisition = Column(String(100))
     Motivation = Column(String(100))
     Communication = Column(String(100))
@@ -58,6 +60,7 @@ class Grade(Base):
     ThinkingSkills = Column(String(100))
     Responsibility = Column(String(100))
     ProjectExecution = Column(String(100))
+    '''
     DataSource = Column(Integer, ForeignKey('Roles.id'), nullable=False)
     EvaluatorNumber = Column(Integer, nullable=False)
     InputDate = Column(DateTime, nullable = False)
@@ -68,6 +71,7 @@ class TotalGrade(Base):
     Week = Column(Integer)
     EvaluateeID = Column(Integer, ForeignKey('Persons.id'), nullable=False)
     EvaluateeName = Column(String(100), nullable=False)
+    '''
     KnowledgeAcquisition = Column(String(100))
     Motivation = Column(String(100))
     Communication = Column(String(100))
@@ -75,6 +79,7 @@ class TotalGrade(Base):
     ThinkingSkills = Column(String(100))
     Responsibility = Column(String(100))
     ProjectExecution = Column(String(100))
+    '''
     weightST = Column(String(100))
     weightTA = Column(String(100))
     weightIN = Column(String(100))
@@ -85,6 +90,7 @@ class AverageGrade(Base):
     id = Column(Integer, primary_key=True)
     Week = Column(Integer)
     StudentGroup =  Column(Integer, ForeignKey('Groups.id'))
+    '''
     KnowledgeAcquisition = Column(String(100))
     Motivation = Column(String(100))
     Communication = Column(String(100))
@@ -92,6 +98,7 @@ class AverageGrade(Base):
     ThinkingSkills = Column(String(100))
     Responsibility = Column(String(100))
     ProjectExecution = Column(String(100))
+    '''
     InputDate = Column(DateTime, nullable = False)
 
 class SubmitRecord(Base):

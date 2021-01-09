@@ -9,7 +9,7 @@ $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : "";
 $personID = isset($_POST['personID']) ? $_POST['personID'] : "";
 $loginRole = isset($_POST['role']) ? $_POST['role'] : "";
 
-$servername = "39.102.86.62";
+$servername = "39.102.54.216";
 $DBusername = "root";
 $DBpassword = "2788098";
 $DBname = "SDIM";
