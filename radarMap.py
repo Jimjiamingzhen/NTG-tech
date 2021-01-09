@@ -10,11 +10,17 @@ from pyecharts import options as opts
 import numpy
 import sys
 import os
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
-def radar(student, studentName, course, week, studentScore, avgScore, commentor, comment, dir):
+def radar(student, studentName, course, week, rubrics, studentScore, avgScore, commentor, comment, dir):
     page = Page(page_title='%s %s WEEK%d 评分'%(studentName, course, week),layout=Page.SimplePageLayout)
     studentRawData = [studentScore]
     avgRawData = [avgScore]
+    rubricsItem = []
+    for i in range(len(rubrics)):
+        rubricsItem.append({"name": "%s"%rubrics[i][0], "max": 5, "min": 0})
+    '''
+    弃用
     rubricsItem = [{"name": "KnowledgeAcquisition", "max": 5, "min": 0},
 			    {"name": "Motivation", "max": 5, "min": 0},
 			    {"name": "Communication", "max": 5, "min": 0},
@@ -22,6 +28,7 @@ def radar(student, studentName, course, week, studentScore, avgScore, commentor,
 			    {"name": "ThinkingSkills", "max": 5, "min": 0},
 			    {"name": "Responsibility", "max": 5, "min": 0},
 			    {"name": "ProjectExecution", "max": 5, "min": 0}]
+	'''
     radarChart = Radar()
     radarChart.add_schema(schema=rubricsItem,shape="polygon")
     radarChart.add('WEEK%d %s'%(week, studentName), studentRawData, color="#1F1C18")
@@ -29,6 +36,15 @@ def radar(student, studentName, course, week, studentScore, avgScore, commentor,
     tableScores = Table()
 
     scoreHeaders = ["Rubrics Item", "Score", "Class Average"]
+    scoreRows = []
+    for i in range(len(rubrics)):
+        print(rubrics)
+        print(studentScore)
+        print(avgScore)
+        scoreRows.append([rubrics[i][0], studentScore[i], avgScore[i]])
+
+    '''
+    弃用
     scoreRows = [
         ["Knowledge Acquisition", studentScore[0], avgScore[0]],
         ["Motivation", studentScore[1], avgScore[1]],
@@ -38,6 +54,8 @@ def radar(student, studentName, course, week, studentScore, avgScore, commentor,
         ["Responsibility", studentScore[5], avgScore[5]],
         ["Project Execution", studentScore[6], avgScore[6]]
     ]
+    '''
+
     tableScores.add(scoreHeaders, scoreRows).set_global_opts(
         title_opts=opts.ComponentTitleOpts(title="Scores")
     )
@@ -54,33 +72,44 @@ def radar(student, studentName, course, week, studentScore, avgScore, commentor,
     page.add(radarChart)
     page.add(tableScores)
     page.add(tableComments)
-    page.render("%s/%dWEEK%d.html"%(dir, student, week))
+    #page.render("%s/%dWEEK%d.html"%(dir, student, week))
+    page.render("%s\%dWEEK%d.html"%(dir, student, week))
 
 def generateRadarMap(session, student, week, course, path):
+    #查询课程采用的rubrics
+    rubrics = session.query(db_classes.Rubrics.RubricsName).all()
+
+    #向定义好的类中加入rubrics属性
+    for i in range(len(rubrics)):
+        if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
+            setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
+    for i in range(len(rubrics)):
+        if not hasattr(db_classes.AverageGrade, rubrics[i][0]):
+            setattr(db_classes.AverageGrade, rubrics[i][0], Column(String(100)))
+
+
+    #查询学生的分数
     gradeRecord = session.query(db_classes.TotalGrade).filter(
         sqlalchemy.and_(db_classes.TotalGrade.EvaluateeID == student,
                         db_classes.TotalGrade.Week == week)).first()
+    #学生名字
     studentName = gradeRecord.EvaluateeName
-    K = gradeRecord.KnowledgeAcquisition if gradeRecord.KnowledgeAcquisition is not None else 0
-    M = gradeRecord.Motivation if gradeRecord.Motivation is not None else 0
-    C = gradeRecord.Communication if gradeRecord.Communication is not None else 0
-    H = gradeRecord.HandsOnSkills if gradeRecord.HandsOnSkills is not None else 0
-    T = gradeRecord.ThinkingSkills if gradeRecord.ThinkingSkills is not None else 0
-    R = gradeRecord.Responsibility if gradeRecord.Responsibility is not None else 0
-    P = gradeRecord.ProjectExecution if gradeRecord.ProjectExecution is not None else 0
-    studentScore = [K, M, C, H, T, R, P]
+    #缓存分数和班级平均分
+    studentScore = []
+    avgScore = []
 
+    #读取分数
+    for i in range(len(rubrics)):
+        studentScore.append(gradeRecord.__dict__[rubrics[i][0]] if gradeRecord.__dict__[rubrics[i][0]] is not None else 0)
+
+    #查询平均分
     Average = session.query(db_classes.AverageGrade).filter(
         sqlalchemy.and_(db_classes.AverageGrade.Week == week,
-                        db_classes.AverageGrade.StudentGroup == 6)).first()
-    AK = Average.KnowledgeAcquisition if Average.KnowledgeAcquisition is not None else 0
-    AM = Average.Motivation if Average.Motivation is not None else 0
-    AC = Average.Communication if Average.Communication is not None else 0
-    AH = Average.HandsOnSkills if Average.HandsOnSkills is not None else 0
-    AT = Average.ThinkingSkills if Average.ThinkingSkills is not None else 0
-    AR = Average.Responsibility if Average.Responsibility is not None else 0
-    AP = Average.ProjectExecution if Average.ProjectExecution is not None else 0
-    avgScore = [AK, AM, AC, AH, AT, AR, AP]
+                        db_classes.AverageGrade.StudentGroup == None)).first()
+
+    #读取分数
+    for i in range(len(rubrics)):
+        avgScore.append(Average.__dict__[rubrics[i][0]] if Average.__dict__[rubrics[i][0]] is not None else 0)
 
     commentTAQuery = session.query(db_classes.Comments).filter(
         sqlalchemy.and_(db_classes.Comments.EvaluateeID == student,
@@ -101,7 +130,8 @@ def generateRadarMap(session, student, week, course, path):
         TAname = session.query(db_classes.Persons.PersonName).filter(db_classes.Persons.id == commentTA.EvaluatorID).first()[0]
         commentor.append(TAname)
         comment.append(commentTA.Comment)
-    radar(student, studentName, course, week, studentScore, avgScore, commentor, comment, path)
+
+    radar(student, studentName, course, week, rubrics, studentScore, avgScore, commentor, comment, path)
 
 if __name__ == '__main__':
 
@@ -115,12 +145,14 @@ if __name__ == '__main__':
 
     students = session.query(db_classes.Persons.id).filter(db_classes.Persons.PersonRole == 1).all()
 
-    folder = r'/opt/lampp/htdocs/SDM202/RESULT'
-    #folder = r'D:\xampp\htdocs\test\RESULT'
+    #folder = r'/opt/lampp/htdocs/SDM202/RESULT'
+    folder = r'D:\xampp\htdocs\test\RESULT'
     tempPath = os.path.join(folder, r"temp")
-    os.mkdir(tempPath)
-    radarMapPath = os.path.join(tempPath, r"radarMap") 
-    os.mkdir(radarMapPath)
+    if not os.path.exists(tempPath):
+        os.mkdir(tempPath)
+    radarMapPath = os.path.join(tempPath, r"radarMap")
+    if not os.path.exists(radarMapPath):
+        os.mkdir(radarMapPath)
     for student in students:
         studentid = student[0]
         generateRadarMap(session, studentid, week, course, radarMapPath)
