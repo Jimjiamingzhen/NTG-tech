@@ -8,13 +8,14 @@ $newPassword = isset($_POST['newPassword']) ? $_POST['newPassword'] : "";
 $confirm = isset($_POST['confirm']) ? $_POST['confirm'] : "";
 $personID = isset($_POST['personID']) ? $_POST['personID'] : "";
 $loginRole = isset($_POST['role']) ? $_POST['role'] : "";
-
+include ('dbinfo.php');
+/*
 $servername = "39.102.54.216";
 $DBusername = "root";
 $DBpassword = "2788098";
-$DBname = "SDIM";
 $port = 3306;
-
+*/
+$DBname = "SDIM";
  //建立连接
 $conn = new mysqli($servername, $DBusername, $DBpassword, $DBname, $port);
 $conn -> query("SET NAMES utf8");

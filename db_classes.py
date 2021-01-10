@@ -89,7 +89,7 @@ class AverageGrade(Base):
     __tablename__ = 'AverageGrade'
     id = Column(Integer, primary_key=True)
     Week = Column(Integer)
-    StudentGroup =  Column(Integer, ForeignKey('Groups.id'))
+    StudentGroup = Column(Integer, ForeignKey('Groups.id'))
     '''
     KnowledgeAcquisition = Column(String(100))
     Motivation = Column(String(100))

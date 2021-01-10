@@ -8,6 +8,7 @@ import codecs
 import zipfile
 import sys
 import shutil
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
 args = sys.argv  # [filename, course, week, weighIN, weightTA, weightST]
 course = args[1]
@@ -19,7 +20,18 @@ engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-folder = r'/opt/lampp/htdocs/SDM202/RESULT'
+#查询课程所用的rubrics
+rubrics = session.query(db_classes.Rubrics.RubricsName).all()
+
+# 向定义好的Grade类中加入评价项目属性
+for i in range(len(rubrics)):
+    if not hasattr(db_classes.Grade, rubrics[i][0]):
+        setattr(db_classes.Grade, rubrics[i][0], Column(String(100)))
+    if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
+        setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
+
+#folder = r'/opt/lampp/htdocs/SDM202/RESULT'
+folder = r'.\RESULT'
 tempPath = os.path.join(folder, r"temp")
 pathGradeFile = os.path.join(tempPath, r"evaluations%sWEEK%d.csv"%(course, week))
 evaluationsFile = codecs.open(pathGradeFile, 'w', "gbk")
@@ -51,7 +63,8 @@ for dirpath, dirnames, filenames in os.walk(pathRadar):
     fpath = dirpath.replace(pathRadar,'')
     for filename in filenames:
         print(os.path.join(dirpath, filename))
-        Zip.write(os.path.join(dirpath, filename),r"/radarMap/%s"%filename)
+        #Zip.write(os.path.join(dirpath, filename),r"/radarMap/%s"%filename)
+        Zip.write(os.path.join(dirpath, filename),r"\radarMap\%s"%filename)
 Zip.close()
 
 shutil.rmtree(tempPath)

@@ -151,7 +151,7 @@
                 weekValid:true,
                 evaluator:"<?php echo $_SESSION['user'];?>",
                 date:"",
-                rubrics:['Knowledge Acquisition','Motivation','Communication','Hands-on Skills', 'Thinking Skills','Responsibility','Project Execution'],
+                rubrics:[],
                 course:"",
                 alertText:"Response：",
                 errorCount:0,
@@ -159,21 +159,20 @@
                 courseList:<?php echo json_encode($_SESSION['courseList'])?>,
             },
             methods:{
-                getEvaluatees:function(){
+                getScoringSheetData:function(){
                     var params = new URLSearchParams();
                     params.append('evaluator',this.evaluator);
                     params.append('course',this.courseList[0]);
                     var that = this;
                     axios
-                        .post('getGroupMembersName.php',params)
+                        .post('getScoringSheetData.php',params)
                         .then(
                             function(response){
-                                console.log(response.data);
-                                var evaluateeNames = response.data;
+                                that.rubrics = response.data.rubrics;
+                                var evaluateeNames = response.data.evaluatee;
                                 for (person in evaluateeNames){
-                                that.evaluations.push({evaluatee : evaluateeNames[person], score:["","","","","","",""], comment:"", valid:[true,true,true,true,true,true,true]});
+                                that.evaluations.push({evaluatee : evaluateeNames[person], score:new Array(that.rubrics.length).fill("1"), comment:"", valid:new Array(that.rubrics.length).fill(true)});
                                 }
-                                console.log(that.evaluations);
                             }
 
                         );
@@ -182,11 +181,12 @@
 
                 },
                 submitEvaluation:function(){
-                    function Evaluation(week, evaluator, evaluatee, course, K, M, C, H, T, R, P, date,comment){
+                    function Evaluation(week, evaluator, evaluatee, course, scores, date,comment){
                         this.week = week;
                         this.evaluator = evaluator;
                         this.evaluatee = evaluatee;
                         this.course = course
+                        /*
                         this.K = K;
                         this.M = M;
                         this.C = C;
@@ -194,6 +194,8 @@
                         this.T = T;
                         this.R = R;
                         this.P = P;
+                        */
+                        this.scores = scores;
                         this.InputDate = date;
                         this.comment = comment;
                     }
@@ -250,13 +252,13 @@
                                 break;
                             }
                         }
-                        console.log('done');
                     }
 
                     function sql_str(){
                         var str="and,delete,or,exec,insert,select,union,update,count,*,',join,>,<";
                         return str;
                     }
+
                     var evaluationsToSubmit = [];
                     var evaluations = this.evaluations;
                     var that = this;
@@ -269,7 +271,7 @@
                     validateCourse(that);
                     for(person in evaluations){
                         var personRecord = evaluations[person];
-                        invalid = validateScore(personRecord,7,that);
+                        invalid = validateScore(personRecord,this.rubrics.length,that);
                         for(i in invalid){
                             this.evaluations[person].valid[invalid[i]] = false;
                             this.$forceUpdate();
@@ -278,9 +280,7 @@
                         evaluationsToSubmit.push(
                             new Evaluation(
                                 this.week, this.evaluator, personRecord.evaluatee, 
-                                this.course, personRecord.score[0], personRecord.score[1], 
-                                personRecord.score[2], personRecord.score[3], personRecord.score[4], 
-                                personRecord.score[5], personRecord.score[6], this.date, personRecord.comment));
+                                this.course, personRecord.score, this.date, personRecord.comment));
                     }
                     if (this.submitAllowed == true){
                         var evaluationsInJson = JSON.stringify(evaluationsToSubmit)
@@ -301,7 +301,7 @@
                 },
             },
             created(){
-                    this.getEvaluatees();
+                    this.getScoringSheetData();
                     this.course = this.courseList[0];
                 }
             })

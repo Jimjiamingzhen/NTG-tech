@@ -10,10 +10,12 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 def calcTotalGrade(session, student, week, weightST, weightTA, weightIN):
     #查询课程采纳的rubrics
     rubrics = session.query(db_classes.Rubrics.RubricsName).all()
-
+    #向定义好的TotalGrade，Grade类中加入评价项目属性
     for i in range(len(rubrics)):
         if not hasattr(db_classes.Grade, rubrics[i][0]):
             setattr(db_classes.Grade, rubrics[i][0], Column(String(100)))
+        if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
+            setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
 
     #对于某一位学生，查询教授、TA、同学对他在该周的评价记录
     scoreST = session.query(db_classes.Grade).filter(
@@ -40,11 +42,6 @@ def calcTotalGrade(session, student, week, weightST, weightTA, weightIN):
         weightedScore = weightST * float(itemScoreST) + weightTA * float(itemScoreTA) + weightIN * float(itemScoreIN)
         totalScore.append(weightedScore)
 
-    #向定义好的TotalGrade类中加入评价项目属性
-    for i in range(len(rubrics)):
-        if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
-            setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
-
     #建立新的总分对象
     new_totalGrade = db_classes.TotalGrade()
     new_totalGrade.Week = week
@@ -55,7 +52,7 @@ def calcTotalGrade(session, student, week, weightST, weightTA, weightIN):
 
     #将缓存中的分数赋予new_totalGrade的属性中
     for i in range(len(rubrics)):
-        setattr(new_totalGrade, rubrics[i][0], str(round(totalScore[i], 2) if totalScore[i] is not None else totalScore[i]))
+        setattr(new_totalGrade, rubrics[i][0], str(round(totalScore[i], 2)) if totalScore[i] is not None else totalScore[i])
 
     '''
     已弃用

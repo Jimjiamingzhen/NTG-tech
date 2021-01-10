@@ -1,12 +1,16 @@
 <?php
     $weekNumber = isset($_POST['weekNumber']) ? $_POST['weekNumber'] : "?";
     $course = isset($_POST['course']) ? $_POST['course'] : "?";
+    include ('dbinfo.php');
+
+    /*
     $servername = "39.102.54.216";
     $username = "root";
     $password = "2788098";
-    $dbname = $course;
     $port = '3306';
-    $conn = new mysqli($servername, $username, $password, $dbname, $port);
+    */
+    $dbname = $course;
+    $conn = new mysqli($servername, $DBusername, $DBpassword, $dbname, $port);
     $conn -> query("SET NAMES utf8");
     // 检测连接
     if ($conn->connect_error) {

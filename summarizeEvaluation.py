@@ -46,10 +46,10 @@ def summarizeEvaluations(session, student, role, week):
         if itemEvaluatorNumber[0][0] > evaluatorNumber: evaluatorNumber = itemEvaluatorNumber[0][0]
         scores.append(score[0][0])#加入缓存
     new_grade.EvaluatorNumber = evaluatorNumber
-
     #将缓存中的分数赋予new_grade的属性中
     for i in range(len(rubrics)):
-        setattr(new_grade, rubrics[i][0], str(round(scores[i], 2) if scores[i] is not None else scores[i]))
+        print('1111111111111111111111',type(scores[i]))
+        setattr(new_grade, rubrics[i][0], str(round(scores[i], 2)) if scores[i] is not None else None)
     '''
     已弃用
     new_grade.KnowledgeAcquisition = round(scores[0], 2) if scores[0] is not None else scores[0]

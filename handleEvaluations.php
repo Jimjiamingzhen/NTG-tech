@@ -3,12 +3,17 @@
     $evaluationsInJson = htmlspecialchars_decode(isset($_POST['evaluationData']) ? htmlspecialchars($_POST['evaluationData']) : '');
     $course = htmlspecialchars_decode(isset($_POST['course']) ? htmlspecialchars($_POST['course']) : '');
     $evaluations = json_decode($evaluationsInJson);
+    include ('dbinfo.php');
+    
+    /*
     $servername = "39.102.54.216";
     $username = "root";
     $password = "2788098";
-    $dbname = $course;
     $port = 3306;
-    $conn = connectToServer($servername, $username, $password, $dbname, $port);
+    */
+
+    $dbname = $course;
+    $conn = connectToServer($servername, $DBusername, $DBpassword, $dbname, $port);
     $evaluationAlreadyExist = alreadySubmitted($conn, $evaluations[0]);
     if($evaluationAlreadyExist){
         echo 'Evaluation on week '.$evaluations[0] ->{'week'}.' Already Exist';
@@ -52,14 +57,17 @@
         $evaluateeId = getPerson($conn, $evaluation ->{'evaluatee'})['id'];
         $inputDate = $evaluation -> {'InputDate'};
         $dataSource = $evaluator['PersonRole'];
-        $scores = array($evaluation -> {'K'}, $evaluation -> {'M'}, $evaluation -> {'C'},$evaluation -> {'H'},$evaluation -> {'T'},$evaluation -> {'R'},$evaluation -> {'P'});
+        $scores = $evaluation -> {'scores'};
         $comment = $evaluation ->{'comment'};
+        $getRubricsNumbersql = "SELECT count(*) FROM Rubrics;";
+        $result = $conn-> query ($getRubricsNumbersql);
+        $rubricsNumber = $result -> fetch_assoc()['count(*)'];
         $sql = "";
         if(!empty($comment)){
             $commentsql = "INSERT INTO `Comments` VALUES (NULL, $week, $evaluateeId, $evaluatorId, '$comment', $dataSource, '$inputDate');";
             $conn -> query($commentsql);
         }
-        for ($rubrics = 0; $rubrics < 7; $rubrics++ ){
+        for ($rubrics = 0; $rubrics < $rubricsNumber; $rubrics++ ){
             $rubricsItem = $rubrics + 1;
             $score = $scores[$rubrics];
             $sql .= "INSERT INTO `Evaluation` VALUES (NULL, $week, $evaluateeId, $evaluatorId, $rubricsItem, '$score', '$inputDate', $dataSource);";

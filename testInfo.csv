@@ -1,0 +1,10 @@
+﻿PersonID,PersonName,PersonNameE,Affiliation,Email,PersonRole,StudentGroup
+11111111,活动假人,test1,SDIM,11930170@mail.sustech.edu.cn,Instructor,admin
+22222222,铁血战士,test2,SDIM,11930170@mail.sustech.edu.cn,TA,admin
+33333333,蔡徐坤,test3,SDIM,11930170@mail.sustech.edu.cn,TA,admin
+44444444,老倒霉蛋,test4,SDIM,11930170@mail.sustech.edu.cn,Student,1
+55555555,天赋异禀,test5,SDIM,11930170@mail.sustech.edu.cn,Student,1
+66666666,otto,test6,SDIM,11930170@mail.sustech.edu.cn,Student,1
+77777777,脑淤血,test7,SDIM,11930170@mail.sustech.edu.cn,Student,2
+88888888,大发明家,test8,SDIM,11930170@mail.sustech.edu.cn,Student,2
+99999999,独狼,test9,SDIM,11930170@mail.sustech.edu.cn,Student,3
