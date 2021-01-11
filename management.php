@@ -84,15 +84,23 @@
             <button id ="headToScoringSheet" type="button" onclick="self.location = 'administratorScoringSheet.php';"style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Scoring</button>
         </div>
     </div>
-    <div id = "blank" style = "width:100%;height:50px;">
+    <div id = "blank1" style = "width:100%;height:50px;">
 
     </div>
 
     <div id = "manageEvaluation">
         <p v-show=false v-once>           
-            {{getEvaluationNumber()}}
+            {{getEvaluationNumber(courseList[0])}}
         </p>
         <table>
+            <tr>
+                <th>Course</th>
+                <td colspan = 2>
+                    <select v-model='course' @change = "getEvaluationNumber(course);">
+                        <option v-for = 'coursename in courseList' :value='coursename'>{{coursename}}</option>
+                    </select>
+                </td>
+            </tr>
             <tr>
                 <th>Week</th>
                 <th>EvaluationNumber</th>
@@ -124,7 +132,7 @@
         </table>
 
     </div>
-    <div id = "blank" style = "width:100%;height:50px;">
+    <div id = "blank3" style = "width:100%;height:50px;">
 
     </div>
     <div id="handleEvaluation">
@@ -174,7 +182,6 @@
             <tr>
                 <td colspan = 4>
                 <button id ="calcTotalGrade" type="button" @click="calcTotalGrade">Calculate Total Grade</button>
-                <span v-html = "calcTotalGradeWorkState"></span>
                 </td>
             </tr>
         </table>
@@ -187,13 +194,15 @@
                 weekNumber:16,
                 evaluationNumbers:[],
                 missingEvaluators:[],
-                courseList:<?php echo json_encode($_SESSION['courseList'])?>
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>,
+                course:""
             },
             methods:{
-                getEvaluationNumber:function(){
+                getEvaluationNumber:function(course){
                     var params = new URLSearchParams();
+                    this.course = course;
                     params.append('weekNumber',this.weekNumber);
-                    params.append('course',this.courseList[0]);
+                    params.append('course',this.course);
                     var that = this;
                     axios
                     .post('getEvaluationNumber.php',params)

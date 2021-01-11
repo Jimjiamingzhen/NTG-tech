@@ -112,7 +112,7 @@
                     <td>{{evaluator}}</td>
                     <th>Course</th>
                     <td colspan="2">
-                        <select v-model='course'>
+                        <select v-model='course' @change = "getScoringSheetData();">
                         <option v-for = 'coursename in courseList' :value='coursename'>{{coursename}}</option>
                         </select>
                     </td>
@@ -160,9 +160,13 @@
             },
             methods:{
                 getScoringSheetData:function(){
+                    this.evaluations = [];
+                    if(this.course == ""){
+                        this.course = this.courseList[0];
+                    }
                     var params = new URLSearchParams();
                     params.append('evaluator',this.evaluator);
-                    params.append('course',this.courseList[0]);
+                    params.append('course',this.course);
                     var that = this;
                     axios
                         .post('getScoringSheetData.php',params)
@@ -302,7 +306,6 @@
             },
             created(){
                     this.getScoringSheetData();
-                    this.course = this.courseList[0];
                 }
             })
     </script>

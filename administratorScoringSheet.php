@@ -115,7 +115,7 @@
                     <td>{{evaluator}}</td>
                     <th>Course</th>
                     <td colspan="2">
-                        <select v-model='course'>
+                        <select v-model='course' @change = "getScoringSheetData();">
                             <option v-for = 'coursename in courseList' :value='coursename'>{{coursename}}</option>
                         </select>
                     </td>
@@ -159,19 +159,22 @@
                 alertText:"Response：",
                 errorCount:0,
                 submitAllowed:true,
-                courseList:<?php echo json_encode($_SESSION['courseList'])?>
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>,
             },
             methods:{
                 getScoringSheetData:function(){
+                    this.evaluations = [];
+                    if(this.course == ""){
+                        this.course = this.courseList[0];
+                    }
                     var params = new URLSearchParams();
                     params.append('evaluator',this.evaluator);
-                    params.append('course',this.courseList[0]);
+                    params.append('course',this.course);
                     var that = this;
                     axios
                         .post('getScoringSheetData.php',params)
                         .then(
                             function(response){
-                                console.log(response);
                                 that.rubrics = response.data.rubrics;
                                 var evaluateeNames = response.data.evaluatee;
                                 for (group in evaluateeNames){
@@ -300,7 +303,6 @@
             },
             created(){
                     this.getScoringSheetData();
-                    this.course = this.courseList[0];
                 }
             })
     </script>
