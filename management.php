@@ -85,18 +85,18 @@
         </div>
     </div>
     <div id = "blank1" style = "width:100%;height:50px;">
-
+        <p></p>
     </div>
 
     <div id = "manageEvaluation">
         <p v-show=false v-once>           
-            {{getEvaluationNumber(courseList[0])}}
+            {{getEvaluationNumber()}}
         </p>
         <table>
             <tr>
                 <th>Course</th>
                 <td colspan = 2>
-                    <select v-model='course' @change = "getEvaluationNumber(course);">
+                    <select v-model='course' @change = "getEvaluationNumber();">
                         <option v-for = 'coursename in courseList' :value='coursename'>{{coursename}}</option>
                     </select>
                 </td>
@@ -133,7 +133,7 @@
 
     </div>
     <div id = "blank3" style = "width:100%;height:50px;">
-
+        <p></p>
     </div>
     <div id="handleEvaluation">
         <table>
@@ -182,13 +182,59 @@
             <tr>
                 <td colspan = 4>
                 <button id ="calcTotalGrade" type="button" @click="calcTotalGrade">Calculate Total Grade</button>
+                <span v-html = 'calcTotalGradeWorkState'></span>
                 </td>
             </tr>
         </table>
     </div>
+    <div id = "blank4" style = "width:100%;height:50px;">
+        <p></p>
+    </div>
+    <div id="immigrateEvaluation">
+        <table>
+            <tr>
+                <td colspan = 4>
+                IMMIGRATE EVALUATIONS
+                </td>
+            </tr>
+            <tr>
+                <td >
+                    FromWeek:<input v-model = "fromWeek" placeholder = "fromWeek" @change="getNameList">
+                </td>
+                <td colspan = 2>
+                    Course:
+                    <select v-model='course' @change="getNameList">
+                        <option v-for = 'coursename in courseList' :value='coursename' >{{coursename}}</option>
+                    </select>                
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   ToWeek:<input v-model = "toWeek" placeholder = "toWeek">
+                </td>
+                <td>
+                    Evaluator:
+                    <select v-model='selectedName'>
+                        <option v-for = 'name in nameList' :value='name'>{{name}}</option>
+                        <option v-if = 'this.nameList[0]!="NULL"' :value = '"*"'>所有人</option>
+                    </select>  
+                </td>
+            </tr>
+            <tr>
+                <td colspan = 4>
+                <button id ="immigrate" type="button" @click="submitImmigrateRequest">Immigrate Evaluation</button>
+                <span v-html = 'response'></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+
     <script>
 
-        new Vue({
+        var manager = new Vue({
             el:'#manageEvaluation',
             data:{
                 weekNumber:16,
@@ -198,9 +244,11 @@
                 course:""
             },
             methods:{
-                getEvaluationNumber:function(course){
+                getEvaluationNumber:function(){
+                    if(this.course == ""){
+                        this.course = this.courseList[0];
+                    }
                     var params = new URLSearchParams();
-                    this.course = course;
                     params.append('weekNumber',this.weekNumber);
                     params.append('course',this.course);
                     var that = this;
@@ -208,16 +256,14 @@
                     .post('getEvaluationNumber.php',params)
                     .then(
                         function(response){
-                            console.log(response.data);
                             that.evaluationNumbers = response.data.evaluationNumber; 
                             that.missingEvaluators = response.data.missingEvaluators;
                         }
-
                     )
                 }
             }
         })
-        new Vue({
+        var handler = new Vue({
             el:"#handleEvaluation",
             data:{
                 week:10,
@@ -227,7 +273,6 @@
                 STweight:0.2,
                 STINweight:0.625,
                 STTAweight:0.375,
-                summarizeWorkState:"",
                 calcTotalGradeWorkState:"",
                 courseList:<?php echo json_encode($_SESSION['courseList'])?>
             },
@@ -262,12 +307,68 @@
                     axios.post('statistics.php',params).then(function(response){
                         that.calcTotalGradeWorkState = "Done";
                         window.open("RESULT/" + that.course + "WEEK" + that.week + ".zip");
-                        console.log(response.data);
                     });
                 }
             },
             created(){
                     this.course = this.courseList[0];
+                }
+        })
+
+        var immigrator = new Vue({
+            el:"#immigrateEvaluation",
+            data:{
+                fromWeek:10,
+                toWeek:10,
+                course:'',
+                selectedName:'',
+                nameList:['NULL'],
+                response:"",
+                courseList:<?php echo json_encode($_SESSION['courseList'])?>
+            },
+            methods:{
+                getNameList:function(){
+                    var params = new URLSearchParams();
+                    params.append('fromWeek',this.fromWeek);
+                    params.append('course',this.course);
+                    params.append('action','requestNameList');
+                    var that = this;
+                    axios.post('immigrateEvaluation.php',params).then(function(response){
+                        that.nameList = response.data;
+                        that.$forceUpdate;
+                        if(that.nameList.length == 0){
+                            that.nameList = ['NULL']
+                        }
+                        that.selectedName = that.nameList[0];
+                    });
+                },
+                submitImmigrateRequest:function(){
+                    if(this.selectedName == 'NULL'){
+                        this.response = 'FAILED! Evaluator is null';
+                    }
+                    else{
+                        var params = new URLSearchParams();
+                        params.append('fromWeek',this.fromWeek);
+                        params.append('course',this.course);
+                        params.append('toWeek',this.toWeek);
+                        params.append('name',this.selectedName);
+                        params.append('action','immigrate');
+                        var that = this;
+                        axios.post('immigrateEvaluation.php',params).then(function(response){
+                            that.response = response.data;
+                            that.getNameList();
+                            manager.getEvaluationNumber();
+                    });                       
+
+                    }
+
+                    
+
+                }
+            },
+            created(){
+                    this.course = this.courseList[0];
+                    this.getNameList();
                 }
         })
     </script>
