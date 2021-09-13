@@ -12,7 +12,7 @@ import db_classes_SDIM
 import time
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
-course = 'SDM000'
+course = 'SDM242'
 # %% connect engine
 SQLALCHEMY_DATABASE_URI_COURSE = 'mysql+pymysql://' + dbinfo.user + ':' + dbinfo.password + '@' + dbinfo.host + '/' + course
 engine_course = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI_COURSE, echo=True)
@@ -50,7 +50,7 @@ for rubric in constants.RUBRICS:
 session.commit()
 
 # %% initiate the students
-person_file = './testinfo.csv'
+person_file = r'.\testinfo.csv'
 person_data = pd.read_csv(person_file) 
 person_list = [person_data.iloc[i] for i in range(len(person_data['PersonID']))]
 print('--------------------------')

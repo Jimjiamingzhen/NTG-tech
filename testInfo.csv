@@ -1,10 +1,30 @@
 ﻿PersonID,PersonName,PersonNameE,Affiliation,Email,PersonRole,StudentGroup
-11111111,活动假人,test1,SDIM,11930170@mail.sustech.edu.cn,Instructor,admin
-22222222,铁血战士,test2,SDIM,11930170@mail.sustech.edu.cn,TA,admin
-33333333,蔡徐坤,test3,SDIM,11930170@mail.sustech.edu.cn,TA,admin
-44444444,老倒霉蛋,test4,SDIM,11930170@mail.sustech.edu.cn,Student,1
-55555555,天赋异禀,test5,SDIM,11930170@mail.sustech.edu.cn,Student,1
-66666666,otto,test6,SDIM,11930170@mail.sustech.edu.cn,Student,1
-77777777,脑淤血,test7,SDIM,11930170@mail.sustech.edu.cn,Student,2
-88888888,大发明家,test8,SDIM,11930170@mail.sustech.edu.cn,Student,2
-99999999,独狼,test9,SDIM,11930170@mail.sustech.edu.cn,Student,3
+12011305,郑曜孜,Zheng Yaozi,通识与学科基础部,12011305@mail.sustech.edu.cn,Student,2
+12012638,张怡楠,Zhang Yinan,通识与学科基础部,12012638@mail.sustech.edu.cn,Student,3
+12010207,何典峻,He Dianjun,通识与学科基础部,12010207@mail.sustech.edu.cn,Student,3
+12011816,朱宇翔,Zhu Yuxiang,通识与学科基础部,12011816@mail.sustech.edu.cn,Student,1
+12012144,沈翛霄,Shen Xiaoxiao,通识与学科基础部,12012144@mail.sustech.edu.cn,Student,5
+12012441,杨苏仪,Yang Suyi,通识与学科基础部,12012441@mail.sustech.edu.cn,Student,2
+12012039,罗一飞,Luo Yifei,通识与学科基础部,12012039@mail.sustech.edu.cn,Student,3
+12010312,谭逸韬,Tan Tanyitao,通识与学科基础部,12010312@mail.sustech.edu.cn,Student,4
+12010803,巴云鹏,Ba Yunpeng,通识与学科基础部,12010803@mail.sustech.edu.cn,Student,1
+12011403,杨一诺,Yang Yinuo,通识与学科基础部,12011403@mail.sustech.edu.cn,Student,1
+12011226,陈远尧,Chen Yuanyao,通识与学科基础部,12011226@mail.sustech.edu.cn,Student,4
+12011742,蒋含熙,Jiang Hanxi,通识与学科基础部,12011742@mail.sustech.edu.cn,Student,5
+12012220,杨文赞,Yang Wenzan,通识与学科基础部,12012220@mail.sustech.edu.cn,Student,2
+12010637,曾书涵,Zeng Shuhan,通识与学科基础部,12010637@mail.sustech.edu.cn,Student,1
+12011128,冯杜良,Feng Duliang,通识与学科基础部,12011128@mail.sustech.edu.cn,Student,4
+12011430,汪浩然,Wang Haoran,通识与学科基础部,12011430@mail.sustech.edu.cn,Student,1
+12011737,李铭硕,Li Mingshuo,通识与学科基础部,12011737@mail.sustech.edu.cn,Student,4
+12011519,侯天诺,Hou Tiannuo,通识与学科基础部,12011519@mail.sustech.edu.cn,Student,1
+12011101,吴杰霖,Wu Jielin,通识与学科基础部,12011101@mail.sustech.edu.cn,Student,5
+12011908,李沐璘,Li Mulin,通识与学科基础部,12011908@mail.sustech.edu.cn,Student,5
+12010411,林俊成,Lin Juncheng,通识与学科基础部,12010411@mail.sustech.edu.cn,Student,5
+12010837,韩玉洁,Han Hanyujie,通识与学科基础部,12010837@mail.sustech.edu.cn,Student,2
+12011227,杨基亚维,Yang Jiyawei,通识与学科基础部,12011227@mail.sustech.edu.cn,Student,3
+12010806,郑志鹏,Zheng Zhipeng,通识与学科基础部,12010806@mail.sustech.edu.cn,Student,4
+12012706,赵子鼎,Zhao Ziding,通识与学科基础部,12012706@mail.sustech.edu.cn,Student,2
+11911421,陈桢杰,Chen Zhenjie,通识与学科基础部,11911421@mail.sustech.edu.cn,Student,3
+30010486,洪小平,Xiaoping Hong,SDIM,hongxp@sustech.edu.cn,Instructor,admin
+12132675,任纪翔,Ren Jixiang,系统设计与智能制造学院-智能制造与机器人,12132675@mail.sustech.edu.cn,TA,admin
+12132671,李科,Li Ke,系统设计与智能制造学院-电子科学与技术,12132671@mail.sustech.edu.cn,TA,admin

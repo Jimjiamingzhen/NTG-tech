@@ -1,7 +1,7 @@
-/.idea/*
-/__pycache__/*
+/.idea
+/__pycache__
 dbinfo.py
 dbinfo.php
-/.vs/*
-/.vscode/*
-/logs/*
+/.vs
+/.vscode
+/logs

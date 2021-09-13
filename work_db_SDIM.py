@@ -6,7 +6,7 @@ import pymysql
 import dbinfo
 import db_classes_SDIM
 from db_classes_SDIM import Base
-import constants
+import constants_SDIM
 import pandas as pd
 
 # %% connect engine
@@ -22,12 +22,12 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-for role in constants.ROLES:
+for role in constants_SDIM.ROLES:
     if (session.query(db_classes_SDIM.Roles.id).filter_by(RoleName=role).scalar() is None):
         new_role = db_classes_SDIM.Roles(RoleName=role)
         session.add(new_role)
 
-for course in constants.COURSES:
+for course in constants_SDIM.COURSES:
     if (session.query(db_classes_SDIM.Courses.id).filter_by(CourseID=course[0]).scalar() is None):
         new_course = db_classes_SDIM.Courses(CourseID = course[0], CourseName = course[1])
         session.add(new_course)
