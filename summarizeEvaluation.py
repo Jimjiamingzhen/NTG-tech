@@ -48,7 +48,6 @@ def summarizeEvaluations(session, student, role, week):
     new_grade.EvaluatorNumber = evaluatorNumber
     #将缓存中的分数赋予new_grade的属性中
     for i in range(len(rubrics)):
-        print('1111111111111111111111',type(scores[i]))
         setattr(new_grade, rubrics[i][0], str(round(scores[i], 2)) if scores[i] is not None else None)
     '''
     已弃用
