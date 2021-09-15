@@ -5,8 +5,18 @@ import dbinfo
 import constants
 import time
 import sys
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
 def groupAverage(session, week):
+    #查询课程采纳的rubrics
+    rubrics = session.query(db_classes.Rubrics.RubricsName).all()
+    #向定义好的TotalGrade，Grade类中加入评价项目属性
+    for i in range(len(rubrics)):
+        if not hasattr(db_classes.Grade, rubrics[i][0]):
+            setattr(db_classes.Grade, rubrics[i][0], Column(String(100)))
+        if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
+            setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
+
     for group in range(1, len(session.query(db_classes.Groups.id).all())):
         new_average = db_classes.AverageGrade()
         new_average.Week = week

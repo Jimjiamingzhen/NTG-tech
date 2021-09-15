@@ -5,8 +5,20 @@ import dbinfo
 import constants
 import time
 import sys
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
 def calcTotalGrade(session, student, week, weightST, weightTA, weightIN, weightSTTA, weightSTIN):
+    #查询课程采纳的rubrics
+    rubrics = session.query(db_classes.Rubrics.RubricsName).all()
+    #向定义好的TotalGrade，Grade类中加入评价项目属性
+    for i in range(len(rubrics)):
+        if not hasattr(db_classes.Grade, rubrics[i][0]):
+            setattr(db_classes.Grade, rubrics[i][0], Column(String(100)))
+        if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
+            setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
+        if not hasattr(db_classes.AverageGrade, rubrics[i][0]):
+            setattr(db_classes.AverageGrade, rubrics[i][0], Column(String(100)))
+
     scoreST = session.query(db_classes.Grade).filter(
         sqlalchemy.and_(db_classes.Grade.EvaluateeID == student,
                         db_classes.Grade.DataSource == 1,
