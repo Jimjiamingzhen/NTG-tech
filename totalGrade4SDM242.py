@@ -67,9 +67,24 @@ def calcTotalGrade(session, student, week, weightST, weightTA, weightIN, weightS
     session.commit()
 
 def calcTotalAvg(session, week):
+    #查询课程采纳的rubrics
+    rubrics = session.query(db_classes.Rubrics.RubricsName).all()
+
+    #向定义好的AverageGrade类中加入评价项目属性
+    for i in range(len(rubrics)):
+        if not hasattr(db_classes.AverageGrade, rubrics[i][0]):
+            setattr(db_classes.AverageGrade, rubrics[i][0], Column(String(100)))
+
+    #建立新的平均分对象
     new_average = db_classes.AverageGrade()
     new_average.Week = week
-    new_average.StudentGroup = 6
+
+    for i in range(len(rubrics)):
+        print(db_classes.TotalGrade.__dict__[rubrics[i][0]])
+        setattr(new_average, rubrics[i][0], str(round(
+        session.query(sqlalchemy.func.avg(db_classes.TotalGrade.__dict__[rubrics[i][0]])).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)))
+
+    '''
     new_average.KnowledgeAcquisition = round(
         session.query(sqlalchemy.func.avg(db_classes.TotalGrade.KnowledgeAcquisition)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.Motivation = round(
@@ -84,6 +99,7 @@ def calcTotalAvg(session, week):
         session.query(sqlalchemy.func.avg(db_classes.TotalGrade.Responsibility)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
     new_average.ProjectExecution = round(
         session.query(sqlalchemy.func.avg(db_classes.TotalGrade.ProjectExecution)).filter(db_classes.TotalGrade.Week == new_average.Week).all()[0][0], 2)
+    '''
     new_average.InputDate = time.strftime("%Y-%m-%d")
     session.add(new_average)
     session.commit()
