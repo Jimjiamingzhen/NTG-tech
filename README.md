@@ -1,5 +1,5 @@
 # NTG分数统计系统  
-本系统文件说明如下:  
+
 ## 目录结构  
 ├── RESULT                              // 存放统计成绩生成的zip，包含成绩表格和雷达图  
 ├── .gitignore                          // 不需要记入git的文件  
@@ -26,8 +26,18 @@
 ├── Readme.md                           // help  
 ├── scoringSheet.php                    // 学生端打分界面前端  
 ├── statistic.php                       // 管理后台页面，统计分数后端逻辑  
-├── summarizeEvaluation.py              // python脚本，从数据库中的打分记录计算出学生被某一身份打分的平均分，记录到Evaluation表  
-├── totalGrade.py                       // python脚本，从Evaluation表读取数据，加入不同身份的权重，计算学生该周总分，记录到TotalGrade表  
+├── summarizeEvaluation.py              // python脚本，从数据库中的打分记录计算出学生被某一身份打分的平均分，记录到Grade表  
+├── totalGrade.py                       // python脚本，从Grade表读取数据，加入不同身份的权重，计算学生该周总分，记录到TotalGrade表  
 ├── totalGrade4SDM242.py                // 为2020年的242课程加入的总分计算特化逻辑  
 ├── work_db.py                          // 初始化课程DB  
 └── work_db_SDIM.py                     // 初始化系统DB  
+## 库表设定
+数据库由一个系统数据库和多个课程数据库构成。  
+系统数据库记录所有课程下的成员，使用系统的课程，成员选课记录和登录记录。  
+课程数据库存储该门课程下的成员，分组情况和课程分数。  
+分数以以下的方式记录：  
+Evaluation表：学生每次的提交会产生多条evaluation记录，每条记录记录【第N周A同学给B同学在R项目上打了X分】  
+Grade表：通过summarizeEvaluation.py，由evaluation表的打分记录，分别计算出某个学生从TA，学生，教师三种来源得到的平均分  
+TotalGrade表：通过totalGrade.py，由Grade表的数据加上三种身份占总分的权重计算学生某一周的总分。  
+AverageGrade表：组号不为空的记录为该周某一组学生来自学生的评价平均值，用于242课程的成绩算法。组号为空的记录为某一周全班同学总成绩的平均值。用于生成雷达图。  
+
