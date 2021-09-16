@@ -34,3 +34,4 @@ for course in constants_SDIM.COURSES:
 
 session.commit()
 
+

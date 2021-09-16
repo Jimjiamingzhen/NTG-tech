@@ -64,9 +64,9 @@
             width: 100%;
         }
     </style>
-    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="axios.min.js"></script>
+    <script src="jquery.min.js"></script>
     <script>
         function logout(){
                     $.post("logout.php")
@@ -96,10 +96,10 @@
             <p>Role: Administrator</p>
         </div>
         <div id = "headBlank6"  style ="width:10%;height:50px;float:left;position:relative;">
-            <button id ="logout" type="button" onclick="logout()" style = "width:80%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Logout</button>
+            <button id ="logout" type="button" onclick="logout()" style = "width:80%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:15px;">Logout</button>
         </div>
         <div id = "headBlank7" style ="width:10%;height:50px;float:left;position:relative;">
-            <button id ="headToManagement" type="button" onclick="self.location = 'management.php';" style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Management</button>
+            <button id ="headToManagement" type="button" onclick="self.location = 'management.php';" style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:15px;">Management</button>
         </div>
     </div>
     <!-- BLANK -->  
@@ -175,12 +175,13 @@
                         .post('getScoringSheetData.php',params)
                         .then(
                             function(response){
+                                console.log(response.data);
                                 that.rubrics = response.data.rubrics;
                                 var evaluateeNames = response.data.evaluatee;
                                 for (group in evaluateeNames){
                                     groupEvaluations = new Array();
                                     for(person in evaluateeNames[group]){
-                                        groupEvaluations.push({evaluatee : evaluateeNames[group][person], score:new Array(that.rubrics.length).fill('1'), comment:"", valid:new Array(that.rubrics.length).fill(true)});
+                                        groupEvaluations.push({evaluatee : evaluateeNames[group][person], score:new Array(that.rubrics.length).fill(''), comment:"", valid:new Array(that.rubrics.length).fill(true)});
                                     }
                                     that.evaluations.push(groupEvaluations);
                                 }

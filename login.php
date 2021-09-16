@@ -3,7 +3,7 @@
     <head>
         <title>SDIM</title>
         <meta charset="UTF-8">
-        <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <script src="vue.min.js"></script>
         <style>
         body{   
             width: 100%;   

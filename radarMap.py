@@ -72,8 +72,8 @@ def radar(student, studentName, course, week, rubrics, studentScore, avgScore, c
     page.add(radarChart)
     page.add(tableScores)
     page.add(tableComments)
-    #page.render("%s/%dWEEK%d.html"%(dir, student, week))
-    page.render("%s\%dWEEK%d.html"%(dir, student, week))
+    page.render("%s/%dWEEK%d.html"%(dir, student, week))
+    #page.render("%s\%dWEEK%d.html"%(dir, student, week))
 
 def generateRadarMap(session, student, week, course, path):
     #查询课程采用的rubrics
@@ -145,8 +145,8 @@ if __name__ == '__main__':
 
     students = session.query(db_classes.Persons.id).filter(db_classes.Persons.PersonRole == 1).all()
 
-    #folder = r'/opt/lampp/htdocs/SDM202/RESULT'
-    folder = r'D:\xampp\htdocs\test\RESULT'
+    folder = r'/opt/lampp/htdocs/SDIM/RESULT'
+    #folder = r'D:\xampp\htdocs\test\RESULT'
     tempPath = os.path.join(folder, r"temp")
     if not os.path.exists(tempPath):
         os.mkdir(tempPath)

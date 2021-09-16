@@ -64,9 +64,9 @@
             width: 100%;
         }
     </style>
-    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="axios.min.js"></script>
+    <script src="jquery.min.js"></script>
     <script>
         function logout(){
                     $.post("logout.php")
@@ -175,7 +175,7 @@
                                 that.rubrics = response.data.rubrics;
                                 var evaluateeNames = response.data.evaluatee;
                                 for (person in evaluateeNames){
-                                that.evaluations.push({evaluatee : evaluateeNames[person], score:new Array(that.rubrics.length).fill("1"), comment:"", valid:new Array(that.rubrics.length).fill(true)});
+                                that.evaluations.push({evaluatee : evaluateeNames[person], score:new Array(that.rubrics.length).fill(""), comment:"", valid:new Array(that.rubrics.length).fill(true)});
                                 }
                             }
 

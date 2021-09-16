@@ -34,8 +34,8 @@
             $toWeek = isset($_POST['toWeek']) ? $_POST['toWeek'] : "?";
             $name = isset($_POST['name']) ? $_POST['name'] : "?";
             if($name == '*'){
-                $sqlImmigrateEvaluation = "UPDATE evaluation SET Week = $toWeek WHERE Week = $fromWeek;";
-                $sqlImmigrateRecord = "UPDATE submitrecord SET Week = $toWeek WHERE Week = $fromWeek;";
+                $sqlImmigrateEvaluation = "UPDATE Evaluation SET Week = $toWeek WHERE Week = $fromWeek;";
+                $sqlImmigrateRecord = "UPDATE SubmitRecord SET Week = $toWeek WHERE Week = $fromWeek;";
                 $immigratingMembers = getNameList($fromWeek,$conn);
                 $exisitingMembers = getNameList($toWeek,$conn);
                 $repeatMembers = array_intersect($immigratingMembers,$exisitingMembers);
@@ -44,11 +44,11 @@
                 }
             }
             else{
-                $sqlGetID = "SELECT id FROM persons WHERE PersonName = '$name';";
+                $sqlGetID = "SELECT id FROM Persons WHERE PersonName = '$name';";
                 $result = $conn -> query($sqlGetID);
                 $ID = $result->fetch_array()['id'];
-                $sqlImmigrateEvaluation = "UPDATE evaluation SET Week = $toWeek WHERE Week = $fromWeek AND EvaluatorID = $ID;";
-                $sqlImmigrateRecord = "UPDATE submitrecord SET Week = $toWeek WHERE Week = $fromWeek AND Evaluator = '$name';";
+                $sqlImmigrateEvaluation = "UPDATE Evaluation SET Week = $toWeek WHERE Week = $fromWeek AND EvaluatorID = $ID;";
+                $sqlImmigrateRecord = "UPDATE SubmitRecord SET Week = $toWeek WHERE Week = $fromWeek AND Evaluator = '$name';";
                 $exisitingMembers = getNameList($toWeek,$conn);
                 $repeatMembers = array_intersect(array($name),$exisitingMembers);
                 if(!empty($repeatMembers)){

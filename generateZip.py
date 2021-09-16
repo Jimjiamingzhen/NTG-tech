@@ -30,8 +30,8 @@ for i in range(len(rubrics)):
     if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
         setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
 
-#folder = r'/opt/lampp/htdocs/SDM202/RESULT'
-folder = r'.\RESULT'
+folder = r'/opt/lampp/htdocs/SDIM/RESULT'
+#folder = r'.\RESULT'
 tempPath = os.path.join(folder, r"temp")
 pathGradeFile = os.path.join(tempPath, r"evaluations%sWEEK%d.csv"%(course, week))
 evaluationsFile = codecs.open(pathGradeFile, 'w', "gbk")
@@ -63,8 +63,8 @@ for dirpath, dirnames, filenames in os.walk(pathRadar):
     fpath = dirpath.replace(pathRadar,'')
     for filename in filenames:
         print(os.path.join(dirpath, filename))
-        #Zip.write(os.path.join(dirpath, filename),r"/radarMap/%s"%filename)
-        Zip.write(os.path.join(dirpath, filename),r"\radarMap\%s"%filename)
+        Zip.write(os.path.join(dirpath, filename),r"/radarMap/%s"%filename)
+        #Zip.write(os.path.join(dirpath, filename),r"\radarMap\%s"%filename)
 Zip.close()
 
 shutil.rmtree(tempPath)

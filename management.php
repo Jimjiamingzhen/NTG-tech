@@ -49,9 +49,9 @@
             width:13%;
         }
     </style>
-    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="axios.min.js"></script>
+    <script src="jquery.min.js"></script>
     <script>
         function logout(){
             $.post("logout.php")
@@ -78,10 +78,10 @@
             <p>Role: Administrator</p>
         </div>
         <div id = "headBlank6"  style ="width:10%;height:50px;float:left;position:relative;">
-            <button id ="logout" type="button" onclick="logout()" style = "width:80%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Logout</button>
+            <button id ="logout" type="button" onclick="logout()" style = "width:80%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:15px;">Logout</button>
         </div>
         <div id = "headBlank7" style ="width:10%;height:50px;float:left;position:relative;">
-            <button id ="headToScoringSheet" type="button" onclick="self.location = 'administratorScoringSheet.php';"style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:5px;">Scoring</button>
+            <button id ="headToScoringSheet" type="button" onclick="self.location = 'administratorScoringSheet.php';"style = "width:90%;height:50%;position:absolute;left:5%;top:25%;text-align:center;font-size:15px;">Scoring</button>
         </div>
     </div>
     <div id = "blank1" style = "width:100%;height:50px;">
