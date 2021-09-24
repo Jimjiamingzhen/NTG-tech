@@ -16,6 +16,8 @@ def groupAverage(session, week):
             setattr(db_classes.Grade, rubrics[i][0], Column(String(100)))
         if not hasattr(db_classes.TotalGrade, rubrics[i][0]):
             setattr(db_classes.TotalGrade, rubrics[i][0], Column(String(100)))
+        if not hasattr(db_classes.AverageGrade, rubrics[i][0]):
+            setattr(db_classes.AverageGrade, rubrics[i][0], Column(String(100)))
 
     for group in range(1, len(session.query(db_classes.Groups.id).all())):
         new_average = db_classes.AverageGrade()
@@ -25,23 +27,12 @@ def groupAverage(session, week):
         groupMembers = []
         for i in range(len(groupMembersQuery)):
             groupMembers.append(groupMembersQuery[i][0])
-        print(groupMembers)
-        print(session.query(sqlalchemy.func.avg(db_classes.Grade.KnowledgeAcquisition)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all())
-        K = session.query(sqlalchemy.func.avg(db_classes.Grade.KnowledgeAcquisition)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        M = session.query(sqlalchemy.func.avg(db_classes.Grade.Motivation)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        C = session.query(sqlalchemy.func.avg(db_classes.Grade.Communication)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        H = session.query(sqlalchemy.func.avg(db_classes.Grade.HandsOnSkills)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        T = session.query(sqlalchemy.func.avg(db_classes.Grade.ThinkingSkills)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        R = session.query(sqlalchemy.func.avg(db_classes.Grade.Responsibility)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        P = session.query(sqlalchemy.func.avg(db_classes.Grade.ProjectExecution)).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
-        new_average.KnowledgeAcquisition = round(K, 2) if K is not None else 0
-        new_average.Motivation = round(M, 2) if M is not None else 0
-        new_average.Communication = round(C, 2) if C is not None else 0
-        new_average.HandsOnSkills = round(H, 2) if H is not None else 0
-        new_average.ThinkingSkills = round(T, 2) if T is not None else 0
-        new_average.Responsibility = round(R, 2) if R is not None else 0
-        new_average.ProjectExecution = round(P, 2) if P is not None else 0
+        for i in range(len(rubrics)):
+            itemAvg = session.query(sqlalchemy.func.avg(db_classes.Grade.__dict__[rubrics[i][0]])).filter(sqlalchemy.and_(db_classes.Grade.EvaluateeID.in_(groupMembers), db_classes.Grade.DataSource == 1, db_classes.Grade.Week == new_average.Week)).all()[0][0]
+            setattr(new_average, rubrics[i][0], round(itemAvg, 2) if itemAvg is not None else 0)
+            print("item %d avg %d"%(i, itemAvg))
         new_average.InputDate = time.strftime("%Y-%m-%d")
+        print('\n'.join(['%s:%s' % item for item in new_average.__dict__.items()]))
         session.add(new_average)
         session.commit()
 
